@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Market Analysis | AlphaPredict AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --primary-dark: #00d4aa;
+            --secondary: #0066ff;
+            --dark-bg: #0b0f1a;
+            --darker-bg: #060912;
+            --card-bg: #121828;
+            --text-light: #cfd8ff;
+            --text-white: #ffffff;
+            --success: #00cc88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --buy: #00cc66;
+            --sell: #ff4d4d;
+            --hold: #ffaa00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-white);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--darker-bg);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo-container h2 {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 15px;
+            background: rgba(0, 255, 204, 0.05);
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu a.active {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: var(--card-bg);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .notification-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--sell);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 77, 77, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Market Overview */
+        .market-overview {
+            margin-bottom: 30px;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .overview-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .overview-card.positive::before {
+            background: var(--success);
+        }
+
+        .overview-card.negative::before {
+            background: var(--danger);
+        }
+
+        .overview-card.neutral::before {
+            background: var(--warning);
+        }
+
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .asset-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .gold .asset-icon {
+            background: linear-gradient(135deg, #FFD700, #FFAA00);
+            color: #000;
+        }
+
+        .btc .asset-icon {
+            background: linear-gradient(135deg, #F7931A, #FF9900);
+            color: #000;
+        }
+
+        .eth .asset-icon {
+            background: linear-gradient(135deg, #627EEA, #8A92B2);
+            color: #000;
+        }
+
+        .forex .asset-icon {
+            background: linear-gradient(135deg, #0066FF, #00AAFF);
+            color: #000;
+        }
+
+        .asset-details h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .asset-details p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .price-change {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: rgba(0, 204, 136, 0.15);
+            color: var(--success);
+        }
+
+        .price-change.negative {
+            background: rgba(255, 77, 77, 0.15);
+            color: var(--danger);
+        }
+
+        .overview-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+
+        .price-info .current-price {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .price-info .price-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .market-sentiment {
+            text-align: right;
+        }
+
+        .sentiment-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .sentiment-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .sentiment-bullish {
+            color: var(--success);
+        }
+
+        .sentiment-bearish {
+            color: var(--danger);
+        }
+
+        .sentiment-neutral {
+            color: var(--warning);
+        }
+        
+        /* Market Tabs */
+        .market-tabs {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            padding: 18px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .tab-content {
+            padding: 30px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+        
+        /* Chart Section */
+        .chart-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .timeframe-select {
+            background: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: var(--text-white);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .timeframe-select:focus {
+            border-color: var(--primary);
+        }
+
+        .chart-indicators {
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .indicator-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .indicator-btn.active {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+        
+        /* Technical Analysis */
+        .technical-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analysis-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .analysis-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .analysis-title i {
+            color: var(--primary);
+        }
+
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .indicator-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid;
+        }
+
+        .indicator-item.positive {
+            border-left-color: var(--success);
+        }
+
+        .indicator-item.negative {
+            border-left-color: var(--danger);
+        }
+
+        .indicator-item.neutral {
+            border-left-color: var(--warning);
+        }
+
+        .indicator-name {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .indicator-value {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .indicator-signal {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .signal-buy {
+            background: rgba(0, 204, 102, 0.15);
+            color: var(--buy);
+        }
+
+        .signal-sell {
+            background: rgba(255, 77, 77, 0.15);
+            color: var(--sell);
+        }
+
+        .signal-neutral {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--hold);
+        }
+
+        .levels-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .levels-table th {
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .levels-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .levels-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .level-price {
+            font-weight: 600;
+        }
+
+        .level-strength {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .strength-strong {
+            background: rgba(0, 204, 136, 0.15);
+            color: var(--success);
+        }
+
+        .strength-medium {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .strength-weak {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--danger);
+        }
+        
+        /* Market Sentiment */
+        .market-sentiment-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sentiment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .sentiment-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sentiment-score {
+            background: var(--darker-bg);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sentiment-score.bullish {
+            color: var(--success);
+            border: 1px solid rgba(0, 204, 136, 0.3);
+        }
+
+        .sentiment-score.bearish {
+            color: var(--danger);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+        }
+
+        .sentiment-score.neutral {
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+        }
+
+        .sentiment-meters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .meter-container {
+            margin-bottom: 20px;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .meter-name {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .meter-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .meter-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .meter-fill.bullish {
+            background: var(--success);
+        }
+
+        .meter-fill.bearish {
+            background: var(--danger);
+        }
+
+        .meter-fill.neutral {
+            background: var(--warning);
+        }
+        
+        /* Footer */
+        .analysis-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+                position: relative;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .nav-menu li {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+            
+            .nav-menu a {
+                white-space: nowrap;
+            }
+            
+            .user-profile {
+                display: none;
+            }
+            
+            .technical-analysis {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .chart-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .indicators-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tabs-header {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .chart-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .sentiment-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h2>AlphaPredict AI</h2>
+        </div>
+        
+        <div class="user-profile">
+            <div class="user-avatar">JD</div>
+            <div class="user-info">
+                <h3>John Doe</h3>
+                <p>Pro Trader</p>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+          <li>
+    <a href="{{ url_for('dashboard') }}">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('market_analysis') }}">
+        <i class="fas fa-chart-bar"></i> Market Analysis
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('signals') }}">
+        <i class="fas fa-bell"></i> Signals
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('portfolio') }}">
+        <i class="fas fa-wallet"></i> Portfolio
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('history') }}">
+        <i class="fas fa-history"></i> History
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('settings') }}" class="active">
+        <i class="fas fa-cog"></i> Settings
+    </a>
+</li>
+
+        </ul>
+        
+        <div class="sidebar-footer">
+            <p>© 2026 AlphaPredict AI</p>
+            <p>v2.5.1</p>
+        </div>
+    </div>
+    
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="page-title">
+                <i class="fas fa-chart-bar"></i> Market Analysis
+            </div>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='/logout'">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Market Overview -->
+        <div class="market-overview">
+            <h2 class="overview-title">
+                <i class="fas fa-globe-americas"></i> Market Overview
+            </h2>
+            
+            <div class="overview-cards">
+                <div class="overview-card gold positive">
+                    <div class="overview-header">
+                        <div class="asset-info">
+                            <div class="asset-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="asset-details">
+                                <h3>Gold (XAUUSD)</h3>
+                                <p>Spot Price</p>
+                            </div>
+                        </div>
+                        <div class="price-change">+1.2%</div>
+                    </div>
+                    
+                    <div class="overview-body">
+                        <div class="price-info">
+                            <div class="current-price" id="goldPrice">$2,350.50</div>
+                            <div class="price-label">24h High: $2,365.20 | Low: $2,320.10</div>
+                        </div>
+                        <div class="market-sentiment">
+                            <div class="sentiment-label">Sentiment</div>
+                            <div class="sentiment-value sentiment-bullish">Bullish</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overview-card btc negative">
+                    <div class="overview-header">
+                        <div class="asset-info">
+                            <div class="asset-icon">
+                                <i class="fab fa-bitcoin"></i>
+                            </div>
+                            <div class="asset-details">
+                                <h3>Bitcoin (BTCUSDT)</h3>
+                                <p>Crypto</p>
+                            </div>
+                        </div>
+                        <div class="price-change negative">-2.1%</div>
+                    </div>
+                    
+                    <div class="overview-body">
+                        <div class="price-info">
+                            <div class="current-price" id="btcPrice">$67,850</div>
+                            <div class="price-label">24h High: $69,520 | Low: $66,980</div>
+                        </div>
+                        <div class="market-sentiment">
+                            <div class="sentiment-label">Sentiment</div>
+                            <div class="sentiment-value sentiment-bearish">Bearish</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overview-card eth positive">
+                    <div class="overview-header">
+                        <div class="asset-info">
+                            <div class="asset-icon">
+                                <i class="fab fa-ethereum"></i>
+                            </div>
+                            <div class="asset-details">
+                                <h3>Ethereum (ETHUSDT)</h3>
+                                <p>Crypto</p>
+                            </div>
+                        </div>
+                        <div class="price-change">+0.8%</div>
+                    </div>
+                    
+                    <div class="overview-body">
+                        <div class="price-info">
+                            <div class="current-price" id="ethPrice">$3,540</div>
+                            <div class="price-label">24h High: $3,580 | Low: $3,460</div>
+                        </div>
+                        <div class="market-sentiment">
+                            <div class="sentiment-label">Sentiment</div>
+                            <div class="sentiment-value sentiment-bullish">Bullish</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Tabs -->
+        <div class="market-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="forex">
+                    <i class="fas fa-globe-americas"></i> Forex
+                </button>
+                <button class="tab-btn" data-tab="crypto">
+                    <i class="fas fa-coins"></i> Cryptocurrency
+                </button>
+                <button class="tab-btn" data-tab="commodities">
+                    <i class="fas fa-gem"></i> Commodities
+                </button>
+                <button class="tab-btn" data-tab="indices">
+                    <i class="fas fa-chart-line"></i> Indices
+                </button>
+            </div>
+            
+            <div class="tab-content">
+                <!-- Forex Tab -->
+                <div class="tab-pane active" id="forex">
+                    <div class="chart-section">
+                        <div class="chart-header">
+                            <div class="chart-title">EUR/USD Price Chart</div>
+                            <div class="chart-controls">
+                                <select class="timeframe-select" id="forexTimeframe">
+                                    <option value="1h">1 Hour</option>
+                                    <option value="4h" selected>4 Hours</option>
+                                    <option value="1d">1 Day</option>
+                                    <option value="1w">1 Week</option>
+                                </select>
+                                <div class="chart-indicators">
+                                    <button class="indicator-btn active" data-indicator="sma">SMA</button>
+                                    <button class="indicator-btn" data-indicator="ema">EMA</button>
+                                    <button class="indicator-btn" data-indicator="macd">MACD</button>
+                                    <button class="indicator-btn" data-indicator="rsi">RSI</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="forexChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="technical-analysis">
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-ruler-combined"></i> Technical Indicators
+                            </h3>
+                            <div class="indicators-grid">
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">RSI (14)</div>
+                                    <div class="indicator-value">62.4</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">MACD</div>
+                                    <div class="indicator-value">+0.0021</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item neutral">
+                                    <div class="indicator-name">Stochastic</div>
+                                    <div class="indicator-value">58.7</div>
+                                    <span class="indicator-signal signal-neutral">NEUTRAL</span>
+                                </div>
+                                <div class="indicator-item negative">
+                                    <div class="indicator-name">Williams %R</div>
+                                    <div class="indicator-value">-42.3</div>
+                                    <span class="indicator-signal signal-sell">SELL</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">CCI</div>
+                                    <div class="indicator-value">+125.6</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">ADX</div>
+                                    <div class="indicator-value">34.2</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-mountain"></i> Support & Resistance
+                            </h3>
+                            <table class="levels-table">
+                                <thead>
+                                    <tr>
+                                        <th>Level</th>
+                                        <th>Price</th>
+                                        <th>Strength</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Resistance 3</td>
+                                        <td class="level-price">1.0950</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 2</td>
+                                        <td class="level-price">1.0910</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 1</td>
+                                        <td class="level-price">1.0880</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Current Price</td>
+                                        <td class="level-price">1.0845</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 1</td>
+                                        <td class="level-price">1.0810</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 2</td>
+                                        <td class="level-price">1.0780</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 3</td>
+                                        <td class="level-price">1.0750</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Crypto Tab -->
+                <div class="tab-pane" id="crypto">
+                    <div class="chart-section">
+                        <div class="chart-header">
+                            <div class="chart-title">Bitcoin (BTCUSDT) Price Chart</div>
+                            <div class="chart-controls">
+                                <select class="timeframe-select" id="cryptoTimeframe">
+                                    <option value="15m">15 Min</option>
+                                    <option value="1h" selected>1 Hour</option>
+                                    <option value="4h">4 Hours</option>
+                                    <option value="1d">1 Day</option>
+                                </select>
+                                <div class="chart-indicators">
+                                    <button class="indicator-btn active" data-indicator="sma">SMA</button>
+                                    <button class="indicator-btn" data-indicator="bollinger">Bollinger</button>
+                                    <button class="indicator-btn" data-indicator="volume">Volume</button>
+                                    <button class="indicator-btn" data-indicator="rsi">RSI</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="cryptoChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="technical-analysis">
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-ruler-combined"></i> Technical Indicators
+                            </h3>
+                            <div class="indicators-grid">
+                                <div class="indicator-item negative">
+                                    <div class="indicator-name">RSI (14)</div>
+                                    <div class="indicator-value">42.1</div>
+                                    <span class="indicator-signal signal-sell">SELL</span>
+                                </div>
+                                <div class="indicator-item negative">
+                                    <div class="indicator-name">MACD</div>
+                                    <div class="indicator-value">-285.4</div>
+                                    <span class="indicator-signal signal-sell">SELL</span>
+                                </div>
+                                <div class="indicator-item neutral">
+                                    <div class="indicator-name">Stochastic</div>
+                                    <div class="indicator-value">48.9</div>
+                                    <span class="indicator-signal signal-neutral">NEUTRAL</span>
+                                </div>
+                                <div class="indicator-item negative">
+                                    <div class="indicator-name">Williams %R</div>
+                                    <div class="indicator-value">-68.5</div>
+                                    <span class="indicator-signal signal-sell">SELL</span>
+                                </div>
+                                <div class="indicator-item negative">
+                                    <div class="indicator-name">CCI</div>
+                                    <div class="indicator-value">-98.7</div>
+                                    <span class="indicator-signal signal-sell">SELL</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">ADX</div>
+                                    <div class="indicator-value">28.4</td>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-mountain"></i> Support & Resistance
+                            </h3>
+                            <table class="levels-table">
+                                <thead>
+                                    <tr>
+                                        <th>Level</th>
+                                        <th>Price</th>
+                                        <th>Strength</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Resistance 3</td>
+                                        <td class="level-price">$71,200</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 2</td>
+                                        <td class="level-price">$69,500</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 1</td>
+                                        <td class="level-price">$68,800</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Current Price</td>
+                                        <td class="level-price">$67,850</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 1</td>
+                                        <td class="level-price">$66,500</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 2</td>
+                                        <td class="level-price">$65,200</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 3</td>
+                                        <td class="level-price">$64,000</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Commodities Tab -->
+                <div class="tab-pane" id="commodities">
+                    <div class="chart-section">
+                        <div class="chart-header">
+                            <div class="chart-title">Gold (XAUUSD) Price Chart</div>
+                            <div class="chart-controls">
+                                <select class="timeframe-select" id="goldTimeframe">
+                                    <option value="1h">1 Hour</option>
+                                    <option value="4h" selected>4 Hours</option>
+                                    <option value="1d">1 Day</option>
+                                    <option value="1w">1 Week</option>
+                                </select>
+                                <div class="chart-indicators">
+                                    <button class="indicator-btn active" data-indicator="sma">SMA</button>
+                                    <button class="indicator-btn" data-indicator="ema">EMA</button>
+                                    <button class="indicator-btn" data-indicator="macd">MACD</button>
+                                    <button class="indicator-btn" data-indicator="rsi">RSI</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="goldChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="technical-analysis">
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-ruler-combined"></i> Technical Indicators
+                            </h3>
+                            <div class="indicators-grid">
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">RSI (14)</div>
+                                    <div class="indicator-value">68.7</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">MACD</div>
+                                    <div class="indicator-value">+8.42</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">Stochastic</div>
+                                    <div class="indicator-value">72.4</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item neutral">
+                                    <div class="indicator-name">Williams %R</div>
+                                    <div class="indicator-value">-28.1</div>
+                                    <span class="indicator-signal signal-neutral">NEUTRAL</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">CCI</div>
+                                    <div class="indicator-value">+142.8</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">ADX</div>
+                                    <div class="indicator-value">41.6</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-mountain"></i> Support & Resistance
+                            </h3>
+                            <table class="levels-table">
+                                <thead>
+                                    <tr>
+                                        <th>Level</th>
+                                        <th>Price</th>
+                                        <th>Strength</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Resistance 3</td>
+                                        <td class="level-price">$2,410</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 2</td>
+                                        <td class="level-price">$2,380</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 1</td>
+                                        <td class="level-price">$2,365</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Current Price</td>
+                                        <td class="level-price">$2,350.50</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 1</td>
+                                        <td class="level-price">$2,320</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 2</td>
+                                        <td class="level-price">$2,295</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 3</td>
+                                        <td class="level-price">$2,270</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Indices Tab -->
+                <div class="tab-pane" id="indices">
+                    <div class="chart-section">
+                        <div class="chart-header">
+                            <div class="chart-title">S&P 500 Index Chart</div>
+                            <div class="chart-controls">
+                                <select class="timeframe-select" id="indicesTimeframe">
+                                    <option value="1h">1 Hour</option>
+                                    <option value="4h">4 Hours</option>
+                                    <option value="1d" selected>1 Day</option>
+                                    <option value="1w">1 Week</option>
+                                </select>
+                                <div class="chart-indicators">
+                                    <button class="indicator-btn active" data-indicator="sma">SMA</button>
+                                    <button class="indicator-btn" data-indicator="ema">EMA</button>
+                                    <button class="indicator-btn" data-indicator="macd">MACD</button>
+                                    <button class="indicator-btn" data-indicator="rsi">RSI</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="indicesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="technical-analysis">
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-ruler-combined"></i> Technical Indicators
+                            </h3>
+                            <div class="indicators-grid">
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">RSI (14)</div>
+                                    <div class="indicator-value">58.2</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">MACD</div>
+                                    <div class="indicator-value">+12.8</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item neutral">
+                                    <div class="indicator-name">Stochastic</div>
+                                    <div class="indicator-value">52.4</div>
+                                    <span class="indicator-signal signal-neutral">NEUTRAL</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">Williams %R</div>
+                                    <div class="indicator-value">-38.7</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">CCI</div>
+                                    <div class="indicator-value">+89.3</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                                <div class="indicator-item positive">
+                                    <div class="indicator-name">ADX</div>
+                                    <div class="indicator-value">32.7</div>
+                                    <span class="indicator-signal signal-buy">BUY</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">
+                                <i class="fas fa-mountain"></i> Support & Resistance
+                            </h3>
+                            <table class="levels-table">
+                                <thead>
+                                    <tr>
+                                        <th>Level</th>
+                                        <th>Price</th>
+                                        <th>Strength</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Resistance 3</td>
+                                        <td class="level-price">5,050</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 2</td>
+                                        <td class="level-price">4,980</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resistance 1</td>
+                                        <td class="level-price">4,920</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Current Price</td>
+                                        <td class="level-price">4,895</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 1</td>
+                                        <td class="level-price">4,850</td>
+                                        <td><span class="level-strength strength-strong">Strong</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 2</td>
+                                        <td class="level-price">4,820</td>
+                                        <td><span class="level-strength strength-medium">Medium</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Support 3</td>
+                                        <td class="level-price">4,780</td>
+                                        <td><span class="level-strength strength-weak">Weak</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Sentiment -->
+        <div class="market-sentiment-section">
+            <div class="sentiment-header">
+                <div class="sentiment-title">
+                    <i class="fas fa-brain"></i> Market Sentiment Analysis
+                </div>
+                <div class="sentiment-score bullish">
+                    <i class="fas fa-arrow-up"></i> Bullish (68%)
+                </div>
+            </div>
+            
+            <div class="sentiment-meters">
+                <div class="meter-container">
+                    <div class="meter-label">
+                        <span class="meter-name">Institutional Sentiment</span>
+                        <span class="meter-value">72% Bullish</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill bullish" style="width: 72%"></div>
+                    </div>
+                </div>
+                
+                <div class="meter-container">
+                    <div class="meter-label">
+                        <span class="meter-name">Retail Sentiment</span>
+                        <span class="meter-value">64% Bullish</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill bullish" style="width: 64%"></div>
+                    </div>
+                </div>
+                
+                <div class="meter-container">
+                    <div class="meter-label">
+                        <span class="meter-name">Social Media Sentiment</span>
+                        <span class="meter-value">58% Bullish</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill bullish" style="width: 58%"></div>
+                    </div>
+                </div>
+                
+                <div class="meter-container">
+                    <div class="meter-label">
+                        <span class="meter-name">News Sentiment</span>
+                        <span class="meter-value">78% Bullish</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill bullish" style="width: 78%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="analysis-footer">
+            <p>Market analysis is AI-generated and updated in real-time. Data may be delayed by up to 15 minutes.</p>
+            <p>Last updated: <span id="lastUpdated">Just now</span></p>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Chart data and configuration
+        let forexChart, cryptoChart, goldChart, indicesChart;
+        
+        // Generate random price data
+        function generatePriceData(basePrice, volatility, points = 50, trend = 0) {
+            const data = [];
+            let currentPrice = basePrice;
+            
+            for (let i = 0; i < points; i++) {
+                // Random walk with slight trend
+                const change = (Math.random() - 0.5) * volatility + trend;
+                currentPrice += change;
+                data.push(currentPrice);
+            }
+            
+            return data;
+        }
+        
+        // Generate time labels
+        function generateTimeLabels(points = 50, timeframe = '4h') {
+            const labels = [];
+            const now = new Date();
+            
+            for (let i = points - 1; i >= 0; i--) {
+                const time = new Date(now);
+                
+                switch(timeframe) {
+                    case '15m':
+                        time.setMinutes(time.getMinutes() - i * 15);
+                        labels.push(time.getHours().toString().padStart(2, '0') + ':' + time.getMinutes().toString().padStart(2, '0'));
+                        break;
+                    case '1h':
+                        time.setHours(time.getHours() - i);
+                        labels.push(time.getHours().toString().padStart(2, '0') + ':00');
+                        break;
+                    case '4h':
+                        time.setHours(time.getHours() - i * 4);
+                        labels.push(time.getDate() + ' ' + time.toLocaleString('default', { month: 'short' }) + ' ' + time.getHours().toString().padStart(2, '0') + ':00');
+                        break;
+                    case '1d':
+                        time.setDate(time.getDate() - i);
+                        labels.push(time.getDate() + ' ' + time.toLocaleString('default', { month: 'short' }));
+                        break;
+                    case '1w':
+                        time.setDate(time.getDate() - i * 7);
+                        labels.push(time.getDate() + ' ' + time.toLocaleString('default', { month: 'short' }));
+                        break;
+                }
+            }
+            
+            return labels.reverse();
+        }
+        
+        // Initialize charts
+        function initCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: '#cfd8ff'
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(18, 24, 40, 0.9)',
+                        titleColor: '#00ffcc',
+                        bodyColor: '#ffffff',
+                        borderColor: '#00ffcc',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#cfd8ff',
+                            maxTicksLimit: 10
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#cfd8ff'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest'
+                }
+            };
+            
+            // Forex Chart (EUR/USD)
+            const forexCtx = document.getElementById('forexChart').getContext('2d');
+            const forexLabels = generateTimeLabels(50, '4h');
+            const forexData = generatePriceData(1.0845, 0.0005, 50, 0.0001);
+            
+            forexChart = new Chart(forexCtx, {
+                type: 'line',
+                data: {
+                    labels: forexLabels,
+                    datasets: [
+                        {
+                            label: 'EUR/USD Price',
+                            data: forexData,
+                            borderColor: '#00ffcc',
+                            backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'SMA (20)',
+                            data: calculateSMA(forexData, 20),
+                            borderColor: '#ffaa00',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: chartOptions
+            });
+            
+            // Crypto Chart (BTC)
+            const cryptoCtx = document.getElementById('cryptoChart').getContext('2d');
+            const cryptoLabels = generateTimeLabels(50, '1h');
+            const cryptoData = generatePriceData(67850, 300, 50, -50);
+            
+            cryptoChart = new Chart(cryptoCtx, {
+                type: 'line',
+                data: {
+                    labels: cryptoLabels,
+                    datasets: [
+                        {
+                            label: 'BTC/USDT Price',
+                            data: cryptoData,
+                            borderColor: '#f7931a',
+                            backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'SMA (20)',
+                            data: calculateSMA(cryptoData, 20),
+                            borderColor: '#00ffcc',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: chartOptions
+            });
+            
+            // Gold Chart
+            const goldCtx = document.getElementById('goldChart').getContext('2d');
+            const goldLabels = generateTimeLabels(50, '4h');
+            const goldData = generatePriceData(2350.50, 5, 50, 2);
+            
+            goldChart = new Chart(goldCtx, {
+                type: 'line',
+                data: {
+                    labels: goldLabels,
+                    datasets: [
+                        {
+                            label: 'Gold (XAUUSD) Price',
+                            data: goldData,
+                            borderColor: '#ffd700',
+                            backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'SMA (20)',
+                            data: calculateSMA(goldData, 20),
+                            borderColor: '#00ffcc',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: chartOptions
+            });
+            
+            // Indices Chart
+            const indicesCtx = document.getElementById('indicesChart').getContext('2d');
+            const indicesLabels = generateTimeLabels(50, '1d');
+            const indicesData = generatePriceData(4895, 15, 50, 5);
+            
+            indicesChart = new Chart(indicesCtx, {
+                type: 'line',
+                data: {
+                    labels: indicesLabels,
+                    datasets: [
+                        {
+                            label: 'S&P 500 Index',
+                            data: indicesData,
+                            borderColor: '#0066ff',
+                            backgroundColor: 'rgba(0, 102, 255, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'SMA (20)',
+                            data: calculateSMA(indicesData, 20),
+                            borderColor: '#ffaa00',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: chartOptions
+            });
+        }
+        
+        // Calculate Simple Moving Average
+        function calculateSMA(data, period) {
+            const sma = [];
+            for (let i = 0; i < data.length; i++) {
+                if (i < period - 1) {
+                    sma.push(null);
+                } else {
+                    const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+                    sma.push(sum / period);
+                }
+            }
+            return sma;
+        }
+        
+        // Update prices in real-time
+        function updatePrices() {
+            // Update gold price
+            let goldBase = 2350.50;
+            let goldChange = (Math.random() - 0.45) * 5; // Slightly bullish bias
+            let goldPrice = (goldBase + goldChange).toFixed(2);
+            document.getElementById('goldPrice').innerText = `$${goldPrice}`;
+            
+            // Update BTC price
+            let btcBase = 67850;
+            let btcChange = (Math.random() - 0.55) * 300; // Slightly bearish bias
+            let btcPrice = (btcBase + btcChange).toFixed(0);
+            document.getElementById('btcPrice').innerText = `$${btcPrice}`;
+            
+            // Update ETH price
+            let ethBase = 3540;
+            let ethChange = (Math.random() - 0.4) * 30; // Slightly bullish bias
+            let ethPrice = (ethBase + ethChange).toFixed(0);
+            document.getElementById('ethPrice').innerText = `$${ethPrice}`;
+            
+            // Update last updated time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('lastUpdated').innerText = timeString;
+            
+            // Update chart data
+            updateChartData();
+        }
+        
+        // Update chart data
+        function updateChartData() {
+            // Add new data point to each chart
+            if (forexChart) {
+                const newForexPoint = forexChart.data.datasets[0].data[forexChart.data.datasets[0].data.length - 1] + (Math.random() - 0.5) * 0.0005;
+                forexChart.data.labels.push(generateTimeLabels(1, '4h')[0]);
+                forexChart.data.datasets[0].data.push(newForexPoint);
+                forexChart.data.datasets[1].data.push(calculateSMA(forexChart.data.datasets[0].data, 20)[forexChart.data.datasets[0].data.length - 1]);
+                
+                // Remove first point if too many
+                if (forexChart.data.labels.length > 50) {
+                    forexChart.data.labels.shift();
+                    forexChart.data.datasets[0].data.shift();
+                    forexChart.data.datasets[1].data.shift();
+                }
+                
+                forexChart.update('none');
+            }
+            
+            if (cryptoChart) {
+                const newCryptoPoint = cryptoChart.data.datasets[0].data[cryptoChart.data.datasets[0].data.length - 1] + (Math.random() - 0.55) * 100;
+                cryptoChart.data.labels.push(generateTimeLabels(1, '1h')[0]);
+                cryptoChart.data.datasets[0].data.push(newCryptoPoint);
+                cryptoChart.data.datasets[1].data.push(calculateSMA(cryptoChart.data.datasets[0].data, 20)[cryptoChart.data.datasets[0].data.length - 1]);
+                
+                if (cryptoChart.data.labels.length > 50) {
+                    cryptoChart.data.labels.shift();
+                    cryptoChart.data.datasets[0].data.shift();
+                    cryptoChart.data.datasets[1].data.shift();
+                }
+                
+                cryptoChart.update('none');
+            }
+        }
+        
+        // Tab functionality
+        function initTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and panes
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabPanes.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding pane
+                    btn.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+        
+        // Indicator buttons functionality
+        function initIndicatorButtons() {
+            const indicatorBtns = document.querySelectorAll('.indicator-btn');
+            
+            indicatorBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const indicator = btn.getAttribute('data-indicator');
+                    
+                    // Toggle active class
+                    btn.classList.toggle('active');
+                    
+                    // In a real app, this would toggle the indicator on the chart
+                    console.log(`Toggled ${indicator} indicator`);
+                });
+            });
+        }
+        
+        // Timeframe select functionality
+        function initTimeframeSelects() {
+            const timeframeSelects = document.querySelectorAll('.timeframe-select');
+            
+            timeframeSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const timeframe = this.value;
+                    const chartId = this.id.replace('Timeframe', '');
+                    
+                    console.log(`Changed ${chartId} timeframe to ${timeframe}`);
+                    
+                    // In a real app, this would update the chart with new data
+                    // For now, we'll just update the chart labels
+                    updateChartTimeframe(chartId, timeframe);
+                });
+            });
+        }
+        
+        // Update chart timeframe
+        function updateChartTimeframe(chartId, timeframe) {
+            let chart, labels;
+            
+            switch(chartId) {
+                case 'forex':
+                    chart = forexChart;
+                    labels = generateTimeLabels(50, timeframe);
+                    break;
+                case 'crypto':
+                    chart = cryptoChart;
+                    labels = generateTimeLabels(50, timeframe);
+                    break;
+                case 'gold':
+                    chart = goldChart;
+                    labels = generateTimeLabels(50, timeframe);
+                    break;
+                case 'indices':
+                    chart = indicesChart;
+                    labels = generateTimeLabels(50, timeframe);
+                    break;
+            }
+            
+            if (chart) {
+                chart.data.labels = labels;
+                chart.update();
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize charts
+            initCharts();
+            
+            // Initialize tabs
+            initTabs();
+            
+            // Initialize indicator buttons
+            initIndicatorButtons();
+            
+            // Initialize timeframe selects
+            initTimeframeSelects();
+            
+            // Initial price update
+            updatePrices();
+            
+            // Update prices every 5 seconds
+            setInterval(updatePrices, 5000);
+            
+            // Update market sentiment meters with animation
+            setTimeout(() => {
+                const meterFills = document.querySelectorAll('.meter-fill');
+                meterFills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0%';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+            
+            // Notification button
+            document.querySelector('.notification-btn').addEventListener('click', function() {
+                // Reset badge count
+                this.querySelector('.notification-badge').textContent = '0';
+                this.querySelector('.notification-badge').style.opacity = '0.5';
+                
+                // Show alert
+                alert('You have 5 new notifications:\n\n1. Gold reached target price\n2. New market analysis available\n3. Bitcoin volatility alert\n4. Weekly report ready\n5. System maintenance scheduled');
+            });
+            
+            // Simulate market sentiment changes
+            setInterval(() => {
+                const sentimentScore = document.querySelector('.sentiment-score');
+                const sentimentValue = document.querySelector('.sentiment-value');
+                
+                // Randomly change sentiment (for demo purposes)
+                const random = Math.random();
+                if (random > 0.7) {
+                    sentimentScore.className = 'sentiment-score bullish';
+                    sentimentScore.innerHTML = '<i class="fas fa-arrow-up"></i> Bullish (68%)';
+                    sentimentValue.className = 'sentiment-value sentiment-bullish';
+                    sentimentValue.textContent = 'Bullish';
+                } else if (random > 0.4) {
+                    sentimentScore.className = 'sentiment-score neutral';
+                    sentimentScore.innerHTML = '<i class="fas fa-arrows-alt-h"></i> Neutral (52%)';
+                    sentimentValue.className = 'sentiment-value sentiment-neutral';
+                    sentimentValue.textContent = 'Neutral';
+                } else {
+                    sentimentScore.className = 'sentiment-score bearish';
+                    sentimentScore.innerHTML = '<i class="fas fa-arrow-down"></i> Bearish (61%)';
+                    sentimentValue.className = 'sentiment-value sentiment-bearish';
+                    sentimentValue.textContent = 'Bearish';
+                }
+            }, 15000);
+        });
+    </script>
+</body>
+</html>

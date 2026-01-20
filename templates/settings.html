@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings | AlphaPredict AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --primary-dark: #00d4aa;
+            --secondary: #0066ff;
+            --dark-bg: #0b0f1a;
+            --darker-bg: #060912;
+            --card-bg: #121828;
+            --text-light: #cfd8ff;
+            --text-white: #ffffff;
+            --success: #00cc88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --buy: #00cc66;
+            --sell: #ff4d4d;
+            --hold: #ffaa00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-white);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--darker-bg);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo-container h2 {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 15px;
+            background: rgba(0, 255, 204, 0.05);
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu a.active {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: var(--card-bg);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .notification-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--sell);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 77, 77, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Settings Container */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 992px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-sidebar {
+                display: none;
+            }
+            
+            .mobile-settings-nav {
+                display: block !important;
+            }
+        }
+
+        /* Settings Sidebar */
+        .settings-sidebar {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            height: fit-content;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-nav-title {
+            font-size: 16px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .settings-nav {
+            list-style: none;
+        }
+
+        .settings-nav li {
+            margin-bottom: 8px;
+        }
+
+        .settings-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .settings-nav a:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .settings-nav a.active {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .settings-nav i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Mobile Settings Nav */
+        .mobile-settings-nav {
+            display: none;
+            margin-bottom: 25px;
+        }
+
+        .mobile-nav-select {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--text-white);
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .mobile-nav-select:focus {
+            border-color: var(--primary);
+        }
+
+        /* Settings Content */
+        .settings-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            margin: 30px 0 20px;
+            color: var(--text-light);
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Forms */
+        .settings-form {
+            max-width: 700px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            background: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 14px 15px;
+            color: var(--text-white);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-hint {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .form-hint.success {
+            color: var(--success);
+        }
+
+        .form-hint.warning {
+            color: var(--warning);
+        }
+
+        .form-hint.error {
+            color: var(--danger);
+        }
+
+        /* Profile Picture */
+        .profile-picture-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Toggle Switches */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-group:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .toggle-main-label {
+            font-weight: 500;
+            color: var(--text-white);
+        }
+
+        .toggle-description {
+            font-size: 13px;
+            color: var(--text-light);
+            max-width: 500px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Checkbox Groups */
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: var(--text-white);
+            cursor: pointer;
+        }
+
+        /* API Keys */
+        .api-key-list {
+            margin-bottom: 30px;
+        }
+
+        .api-key-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .api-key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .api-key-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-white);
+        }
+
+        .api-key-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-key-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .api-key-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .api-key-field {
+            margin-bottom: 10px;
+        }
+
+        .api-key-label {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .api-key-value {
+            font-family: monospace;
+            background: var(--darker-bg);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            word-break: break-all;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .api-key-masked {
+            letter-spacing: 2px;
+        }
+
+        /* Security Sessions */
+        .sessions-list {
+            margin-bottom: 30px;
+        }
+
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .session-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(0, 255, 204, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .session-details h4 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .session-details p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .session-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(0, 204, 136, 0.15);
+            color: var(--success);
+        }
+
+        .status-expired {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--warning);
+        }
+
+        /* Billing Plans */
+        .billing-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .plan-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .plan-card.recommended {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.1);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .plan-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-white);
+        }
+
+        .plan-price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .plan-period {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features i {
+            color: var(--success);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 204, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 51, 102, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 10px 15px;
+            font-size: 13px;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            background: rgba(255, 51, 102, 0.05);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        .danger-zone-title {
+            font-size: 18px;
+            color: var(--danger);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .danger-zone p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        /* Footer */
+        .settings-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+                position: relative;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .nav-menu li {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+            
+            .nav-menu a {
+                white-space: nowrap;
+            }
+            
+            .user-profile {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .profile-picture-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .billing-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .settings-content {
+                padding: 20px;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h2>AlphaPredict AI</h2>
+        </div>
+        
+        <div class="user-profile">
+            <div class="user-avatar">JD</div>
+            <div class="user-info">
+                <h3>John Doe</h3>
+                <p>Pro Trader</p>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li>
+    <a href="{{ url_for('dashboard') }}">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('market_analysis') }}">
+        <i class="fas fa-chart-bar"></i> Market Analysis
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('signals') }}">
+        <i class="fas fa-bell"></i> Signals
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('portfolio') }}">
+        <i class="fas fa-wallet"></i> Portfolio
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('history') }}">
+        <i class="fas fa-history"></i> History
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('settings') }}" class="active">
+        <i class="fas fa-cog"></i> Settings
+    </a>
+</li>
+
+        </ul>
+        
+        <div class="sidebar-footer">
+            <p>© 2026 AlphaPredict AI</p>
+            <p>v2.5.1</p>
+        </div>
+    </div>
+    
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="page-title">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='/logout'">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Settings Nav -->
+        <div class="mobile-settings-nav">
+            <select class="mobile-nav-select" id="mobileSettingsNav">
+                <option value="profile">Profile Settings</option>
+                <option value="account">Account Settings</option>
+                <option value="trading">Trading Preferences</option>
+                <option value="notifications">Notifications</option>
+                <option value="security">Security</option>
+                <option value="api">API Management</option>
+                <option value="billing">Billing & Subscription</option>
+                <option value="privacy">Privacy & Data</option>
+            </select>
+        </div>
+        
+        <!-- Settings Container -->
+        <div class="settings-container">
+            <!-- Settings Sidebar -->
+            <div class="settings-sidebar">
+                <div class="settings-nav-title">Settings</div>
+                <ul class="settings-nav">
+                    <li><a href="#" class="settings-nav-link active" data-section="profile">
+                        <i class="fas fa-user"></i> Profile Settings
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="account">
+                        <i class="fas fa-cog"></i> Account Settings
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="trading">
+                        <i class="fas fa-chart-line"></i> Trading Preferences
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="notifications">
+                        <i class="fas fa-bell"></i> Notifications
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="security">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="api">
+                        <i class="fas fa-key"></i> API Management
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="billing">
+                        <i class="fas fa-credit-card"></i> Billing & Subscription
+                    </a></li>
+                    <li><a href="#" class="settings-nav-link" data-section="privacy">
+                        <i class="fas fa-lock"></i> Privacy & Data
+                    </a></li>
+                </ul>
+            </div>
+            
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- Profile Settings -->
+                <div class="settings-section active" id="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user"></i> Profile Settings
+                    </h2>
+                    
+                    <div class="profile-picture-section">
+                        <div class="profile-picture">
+                            JD
+                        </div>
+                        <div class="profile-picture-actions">
+                            <button class="btn btn-secondary btn-sm">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </button>
+                            <button class="btn btn-secondary btn-sm">
+                                <i class="fas fa-trash"></i> Remove Photo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form class="settings-form" id="profileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required">First Name</label>
+                                <input type="text" class="form-input" id="firstName" value="John" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Last Name</label>
+                                <input type="text" class="form-input" id="lastName" value="Doe" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Email Address</label>
+                            <input type="email" class="form-input" id="email" value="john.doe@example.com" required>
+                            <div class="form-hint">Your email address is used for account notifications and login.</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" id="phone" value="+1 (555) 123-4567">
+                            <div class="form-hint">Optional. Used for two-factor authentication and urgent notifications.</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" id="country">
+                                <option value="us" selected>United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="ca">Canada</option>
+                                <option value="au">Australia</option>
+                                <option value="de">Germany</option>
+                                <option value="fr">France</option>
+                                <option value="jp">Japan</option>
+                                <option value="sg">Singapore</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Timezone</label>
+                            <select class="form-select" id="timezone">
+                                <option value="et" selected>Eastern Time (ET)</option>
+                                <option value="ct">Central Time (CT)</option>
+                                <option value="mt">Mountain Time (MT)</option>
+                                <option value="pt">Pacific Time (PT)</option>
+                                <option value="gmt">GMT (London)</option>
+                                <option value="cet">CET (Central Europe)</option>
+                                <option value="aest">AEST (Sydney)</option>
+                                <option value="jst">JST (Tokyo)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-textarea" id="bio" placeholder="Tell us about yourself...">Professional trader with 7+ years of experience in Forex and Crypto markets. Using AlphaPredict AI to enhance trading strategies.</textarea>
+                            <div class="form-hint">Brief description about yourself (max 250 characters).</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelProfile">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveProfile">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Account Settings -->
+                <div class="settings-section" id="account-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cog"></i> Account Settings
+                    </h2>
+                    
+                    <form class="settings-form" id="accountForm">
+                        <h3 class="section-subtitle">Account Information</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Account Type</label>
+                            <div class="form-input" style="background: var(--darker-bg); padding: 14px 15px; border-radius: 8px;">
+                                <strong>Pro Trader</strong>
+                                <div class="form-hint">Upgrade to Enterprise for advanced features.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Account Created</label>
+                            <div class="form-input" style="background: var(--darker-bg); padding: 14px 15px; border-radius: 8px;">
+                                January 15, 2025
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Last Login</label>
+                            <div class="form-input" style="background: var(--darker-bg); padding: 14px 15px; border-radius: 8px;">
+                                Today at 09:42 AM from New York, USA
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Password</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Current Password</label>
+                            <input type="password" class="form-input" id="currentPassword" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required">New Password</label>
+                                <input type="password" class="form-input" id="newPassword" required>
+                                <div class="form-hint">Minimum 8 characters with uppercase, lowercase, and number.</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Confirm New Password</label>
+                                <input type="password" class="form-input" id="confirmPassword" required>
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Account Preferences</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Email Digest</span>
+                                <span class="toggle-description">Receive weekly summary of your portfolio performance and market insights.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="emailDigest" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Newsletter</span>
+                                <span class="toggle-description">Receive AlphaPredict AI newsletter with trading tips and platform updates.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="newsletter" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Beta Features</span>
+                                <span class="toggle-description">Get early access to new features before they're released to everyone.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="betaFeatures">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelAccount">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveAccount">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Trading Preferences -->
+                <div class="settings-section" id="trading-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-line"></i> Trading Preferences
+                    </h2>
+                    
+                    <form class="settings-form" id="tradingForm">
+                        <h3 class="section-subtitle">Risk Management</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Risk Tolerance</label>
+                            <select class="form-select" id="riskTolerance">
+                                <option value="low">Low (Conservative)</option>
+                                <option value="medium" selected>Medium (Balanced)</option>
+                                <option value="high">High (Aggressive)</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <div class="form-hint">Determines the risk level for auto-trading and signal recommendations.</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Maximum Position Size (% of Portfolio)</label>
+                            <input type="range" class="form-input" id="positionSize" min="1" max="50" value="15" style="padding: 0;">
+                            <div class="form-hint" id="positionSizeValue">15% - Maximum amount to allocate to a single trade</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Maximum Daily Loss Limit (%)</label>
+                            <input type="range" class="form-input" id="dailyLossLimit" min="1" max="20" value="5" style="padding: 0;">
+                            <div class="form-hint" id="dailyLossLimitValue">5% - Stop trading for the day if losses exceed this amount</div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Preferred Markets</h3>
+                        
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="marketForex" checked>
+                                <label class="checkbox-label" for="marketForex">Forex (EUR/USD, GBP/USD, etc.)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="marketCrypto" checked>
+                                <label class="checkbox-label" for="marketCrypto">Cryptocurrency (BTC, ETH, etc.)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="marketGold" checked>
+                                <label class="checkbox-label" for="marketGold">Gold & Commodities</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="marketStocks">
+                                <label class="checkbox-label" for="marketStocks">Stock Indices (S&P 500, NASDAQ)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="marketIndividualStocks">
+                                <label class="checkbox-label" for="marketIndividualStocks">Individual Stocks (AAPL, TSLA, etc.)</label>
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Trading Hours</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">24/7 Trading</span>
+                                <span class="toggle-description">Receive signals and trade around the clock (including weekends for crypto).</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="trading247" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Time (Local)</label>
+                                <input type="time" class="form-input" id="startTime" value="09:00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Time (Local)</label>
+                                <input type="time" class="form-input" id="endTime" value="17:00">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Avoid Trading During News Events</label>
+                            <select class="form-select" id="newsEvents">
+                                <option value="high">High Impact Only (NFP, CPI, FOMC)</option>
+                                <option value="medium" selected>Medium & High Impact</option>
+                                <option value="all">All News Events</option>
+                                <option value="none">Don't Avoid News Events</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelTrading">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveTrading">Save Preferences</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Notifications -->
+                <div class="settings-section" id="notifications-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-bell"></i> Notification Settings
+                    </h2>
+                    
+                    <form class="settings-form" id="notificationsForm">
+                        <h3 class="section-subtitle">Notification Channels</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Email Notifications</span>
+                                <span class="toggle-description">Receive notifications via email.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="emailNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Push Notifications</span>
+                                <span class="toggle-description">Receive browser and mobile push notifications.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pushNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">SMS Notifications</span>
+                                <span class="toggle-description">Receive urgent notifications via SMS (charges may apply).</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="smsNotifications">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Notification Types</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">New Trading Signals</span>
+                                <span class="toggle-description">Notify when new BUY/SELL/HOLD signals are generated.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="signalNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Price Alerts</span>
+                                <span class="toggle-description">Notify when assets reach your target prices.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="priceAlertNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Trade Executions</span>
+                                <span class="toggle-description">Notify when trades are executed, modified, or closed.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="tradeNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Portfolio Updates</span>
+                                <span class="toggle-description">Daily and weekly portfolio performance summaries.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="portfolioNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Market News</span>
+                                <span class="toggle-description">Breaking market news and analysis updates.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="marketNewsNotifications">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">System Alerts</span>
+                                <span class="toggle-description">Platform maintenance, updates, and important announcements.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="systemNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Quiet Hours</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Time</label>
+                                <input type="time" class="form-input" id="quietStart" value="22:00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Time</label>
+                                <input type="time" class="form-input" id="quietEnd" value="07:00">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="form-hint">During quiet hours, only urgent notifications will be sent (e.g., stop-loss triggers).</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelNotifications">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveNotifications">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Security -->
+                <div class="settings-section" id="security-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-shield-alt"></i> Security Settings
+                    </h2>
+                    
+                    <form class="settings-form" id="securityForm">
+                        <h3 class="section-subtitle">Two-Factor Authentication</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Enable 2FA</span>
+                                <span class="toggle-description">Add an extra layer of security to your account with two-factor authentication.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="enable2FA" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">2FA Method</label>
+                            <select class="form-select" id="2faMethod">
+                                <option value="app" selected>Authenticator App (Google Authenticator, Authy)</option>
+                                <option value="sms">SMS</option>
+                                <option value="email">Email</option>
+                            </select>
+                            <div class="form-hint">Authenticator app is the most secure method.</div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Active Sessions</h3>
+                        
+                        <div class="sessions-list">
+                            <div class="session-item">
+                                <div class="session-info">
+                                    <div class="session-icon">
+                                        <i class="fas fa-desktop"></i>
+                                    </div>
+                                    <div class="session-details">
+                                        <h4>Chrome on Windows 11</h4>
+                                        <p>New York, USA • Current Session</p>
+                                    </div>
+                                </div>
+                                <div class="session-status status-active">Active</div>
+                            </div>
+                            
+                            <div class="session-item">
+                                <div class="session-info">
+                                    <div class="session-icon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="session-details">
+                                        <h4>Safari on iPhone 14</h4>
+                                        <p>New York, USA • 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-danger btn-sm">Revoke</button>
+                            </div>
+                            
+                            <div class="session-item">
+                                <div class="session-info">
+                                    <div class="session-icon">
+                                        <i class="fas fa-desktop"></i>
+                                    </div>
+                                    <div class="session-details">
+                                        <h4>Firefox on MacBook Pro</h4>
+                                        <p>London, UK • 3 days ago</p>
+                                    </div>
+                                </div>
+                                <div class="session-status status-expired">Expired</div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary" id="revokeAllSessions">
+                            <i class="fas fa-sign-out-alt"></i> Revoke All Other Sessions
+                        </button>
+                        
+                        <h3 class="section-subtitle">Login History</h3>
+                        
+                        <div class="form-group">
+                            <div class="form-hint">Last 10 login attempts will be shown here.</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelSecurity">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveSecurity">Save Settings</button>
+                        </div>
+                    </form>
+                    
+                    <div class="danger-zone">
+                        <h3 class="danger-zone-title">
+                            <i class="fas fa-exclamation-triangle"></i> Danger Zone
+                        </h3>
+                        <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+                        <button type="button" class="btn btn-danger" id="deleteAccountBtn">
+                            <i class="fas fa-trash"></i> Delete Account
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- API Management -->
+                <div class="settings-section" id="api-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-key"></i> API Management
+                    </h2>
+                    
+                    <form class="settings-form" id="apiForm">
+                        <h3 class="section-subtitle">Exchange API Keys</h3>
+                        
+                        <div class="api-key-list">
+                            <div class="api-key-item">
+                                <div class="api-key-header">
+                                    <div class="api-key-name">Binance API Key</div>
+                                    <div class="api-key-actions">
+                                        <button type="button" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="api-key-details">
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">API Key</div>
+                                        <div class="api-key-value api-key-masked">••••••••••••••••••••••••••••••••</div>
+                                    </div>
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">Permissions</div>
+                                        <div class="api-key-value">Read, Trade</div>
+                                    </div>
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">Created</div>
+                                        <div class="api-key-value">Jan 10, 2026</div>
+                                    </div>
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">Status</div>
+                                        <div class="api-key-value"><span style="color: var(--success);">Active</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="api-key-item">
+                                <div class="api-key-header">
+                                    <div class="api-key-name">Coinbase Pro API Key</div>
+                                    <div class="api-key-actions">
+                                        <button type="button" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="api-key-details">
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">API Key</div>
+                                        <div class="api-key-value api-key-masked">••••••••••••••••••••••••••••••••</div>
+                                    </div>
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">Permissions</div>
+                                        <div class="api-key-value">Read Only</div>
+                                    </div>
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">Created</div>
+                                        <div class="api-key-value">Dec 15, 2025</div>
+                                    </div>
+                                    <div class="api-key-field">
+                                        <div class="api-key-label">Status</div>
+                                        <div class="api-key-value"><span style="color: var(--warning);">Expired</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" id="addApiKeyBtn">
+                            <i class="fas fa-plus"></i> Add New API Key
+                        </button>
+                        
+                        <h3 class="section-subtitle" style="margin-top: 40px;">AlphaPredict API</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Your API Key</label>
+                            <div class="api-key-value">alp_5f8d3e2a1b7c9d6e4f2a1b3c5d7e9f0a</div>
+                            <div class="form-hint">Use this key to access AlphaPredict AI API. Keep it secret!</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">API Usage This Month</label>
+                            <div class="form-input" style="background: var(--darker-bg); padding: 14px 15px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>2,847 / 10,000 requests</span>
+                                    <span>28% used</span>
+                                </div>
+                                <div style="height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 10px; overflow: hidden;">
+                                    <div style="width: 28%; height: 100%; background: var(--primary); border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelApi">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveApi">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Billing & Subscription -->
+                <div class="settings-section" id="billing-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-credit-card"></i> Billing & Subscription
+                    </h2>
+                    
+                    <form class="settings-form" id="billingForm">
+                        <h3 class="section-subtitle">Current Plan</h3>
+                        
+                        <div class="billing-plans">
+                            <div class="plan-card">
+                                <div class="plan-header">
+                                    <div class="plan-name">Basic</div>
+                                    <div class="plan-price">$49<span style="font-size: 16px;">/mo</span></div>
+                                    <div class="plan-period">Billed monthly</div>
+                                </div>
+                                <ul class="plan-features">
+                                    <li><i class="fas fa-check"></i> 10 Signals per day</li>
+                                    <li><i class="fas fa-check"></i> Basic Market Analysis</li>
+                                    <li><i class="fas fa-check"></i> Email Support</li>
+                                    <li><i class="fas fa-times" style="color: var(--text-light);"></i> <span style="color: var(--text-light);">Auto-Trading</span></li>
+                                    <li><i class="fas fa-times" style="color: var(--text-light);"></i> <span style="color: var(--text-light);">Advanced Analytics</span></li>
+                                </ul>
+                                <button type="button" class="btn btn-secondary btn-full">Select Plan</button>
+                            </div>
+                            
+                            <div class="plan-card recommended">
+                                <div class="plan-badge">Current Plan</div>
+                                <div class="plan-header">
+                                    <div class="plan-name">Pro Trader</div>
+                                    <div class="plan-price">$99<span style="font-size: 16px;">/mo</span></div>
+                                    <div class="plan-period">Billed monthly</div>
+                                </div>
+                                <ul class="plan-features">
+                                    <li><i class="fas fa-check"></i> 50 Signals per day</li>
+                                    <li><i class="fas fa-check"></i> Advanced Market Analysis</li>
+                                    <li><i class="fas fa-check"></i> Priority Support</li>
+                                    <li><i class="fas fa-check"></i> Auto-Trading</li>
+                                    <li><i class="fas fa-times" style="color: var(--text-light);"></i> <span style="color: var(--text-light);">Enterprise Features</span></li>
+                                </ul>
+                                <button type="button" class="btn btn-primary btn-full">Current Plan</button>
+                            </div>
+                            
+                            <div class="plan-card">
+                                <div class="plan-header">
+                                    <div class="plan-name">Enterprise</div>
+                                    <div class="plan-price">$199<span style="font-size: 16px;">/mo</span></div>
+                                    <div class="plan-period">Billed monthly</div>
+                                </div>
+                                <ul class="plan-features">
+                                    <li><i class="fas fa-check"></i> Unlimited Signals</li>
+                                    <li><i class="fas fa-check"></i> Premium Market Analysis</li>
+                                    <li><i class="fas fa-check"></i> 24/7 Priority Support</li>
+                                    <li><i class="fas fa-check"></i> Advanced Auto-Trading</li>
+                                    <li><i class="fas fa-check"></i> Custom Indicators</li>
+                                </ul>
+                                <button type="button" class="btn btn-secondary btn-full">Select Plan</button>
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Billing Information</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required">Card Number</label>
+                                <input type="text" class="form-input" id="cardNumber" value="•••• •••• •••• 4242" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Expiration Date</label>
+                                <input type="text" class="form-input" id="cardExpiry" value="12/28" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required">Cardholder Name</label>
+                                <input type="text" class="form-input" id="cardName" value="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">CVC</label>
+                                <input type="text" class="form-input" id="cardCvc" value="•••" required>
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Billing History</h3>
+                        
+                        <div class="form-group">
+                            <div class="form-hint">Last 5 invoices will be shown here.</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelBilling">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveBilling">Update Billing</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Privacy & Data -->
+                <div class="settings-section" id="privacy-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-lock"></i> Privacy & Data Settings
+                    </h2>
+                    
+                    <form class="settings-form" id="privacyForm">
+                        <h3 class="section-subtitle">Data Collection</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Usage Analytics</span>
+                                <span class="toggle-description">Allow us to collect anonymous usage data to improve the platform.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="usageAnalytics" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Personalized Recommendations</span>
+                                <span class="toggle-description">Use your trading history to provide personalized signal recommendations.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="personalizedRecs" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Third-Party Data Sharing</span>
+                                <span class="toggle-description">Share anonymized trading data with research partners (never personally identifiable).</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="thirdPartySharing">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <h3 class="section-subtitle">Data Management</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Data Retention Period</label>
+                            <select class="form-select" id="dataRetention">
+                                <option value="30">30 days</option>
+                                <option value="90">90 days</option>
+                                <option value="365" selected>1 year</option>
+                                <option value="forever">Forever</option>
+                            </select>
+                            <div class="form-hint">How long we keep your trading history and activity logs.</div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary" id="exportDataBtn">
+                            <i class="fas fa-download"></i> Export All Data
+                        </button>
+                        
+                        <div class="form-hint" style="margin-top: 10px;">Download a copy of all your data in JSON format.</div>
+                        
+                        <h3 class="section-subtitle" style="margin-top: 40px;">Privacy Controls</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Public Profile</span>
+                                <span class="toggle-description">Allow other traders to see your public profile and performance stats.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="publicProfile">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <span class="toggle-main-label">Show in Leaderboards</span>
+                                <span class="toggle-description">Include your anonymized performance in public leaderboards.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="leaderboards" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelPrivacy">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="savePrivacy">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="settings-footer">
+            <p>Settings are saved automatically when changed. Some changes may require re-login to take effect.</p>
+            <p>Last updated: <span id="lastUpdated">Just now</span></p>
+        </div>
+    </div>
+    
+    <!-- ===== DELETE ACCOUNT MODAL ===== -->
+    <div class="modal" id="deleteAccountModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Delete Account</h2>
+                <button class="modal-close" id="closeDeleteModal">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <p style="margin-top: 15px; color: var(--danger);"><strong>Warning:</strong> All your data, including trading history, signals, and portfolio information will be permanently deleted.</p>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label class="form-label required">Type "DELETE" to confirm</label>
+                    <input type="text" class="form-input" id="deleteConfirm" placeholder="DELETE">
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" disabled>Delete Account Permanently</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Initialize settings page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation between settings sections
+            const settingsNavLinks = document.querySelectorAll('.settings-nav-link');
+            const mobileSettingsNav = document.getElementById('mobileSettingsNav');
+            const settingsSections = document.querySelectorAll('.settings-section');
+            
+            // Function to show a specific section
+            function showSection(sectionId) {
+                // Hide all sections
+                settingsSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show selected section
+                document.getElementById(`${sectionId}-section`).classList.add('active');
+                
+                // Update nav links
+                settingsNavLinks.forEach(link => {
+                    if (link.getAttribute('data-section') === sectionId) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                
+                // Update mobile select
+                mobileSettingsNav.value = sectionId;
+                
+                // Update last updated time
+                updateLastUpdated();
+            }
+            
+            // Desktop nav links
+            settingsNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Mobile nav select
+            mobileSettingsNav.addEventListener('change', function() {
+                showSection(this.value);
+            });
+            
+            // Form submissions
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveSettings(this.id);
+                });
+            });
+            
+            // Cancel buttons
+            const cancelButtons = document.querySelectorAll('[id^="cancel"]');
+            cancelButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // In a real app, this would reset the form
+                    showNotification('Changes discarded');
+                });
+            });
+            
+            // Save buttons
+            const saveButtons = document.querySelectorAll('[id^="save"]');
+            saveButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // The actual saving is handled by form submit event
+                    // This is just for visual feedback
+                    e.target.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    setTimeout(() => {
+                        e.target.innerHTML = 'Saved!';
+                        setTimeout(() => {
+                            e.target.innerHTML = 'Save Changes';
+                        }, 1500);
+                    }, 1000);
+                });
+            });
+            
+            // Position size slider
+            const positionSizeSlider = document.getElementById('positionSize');
+            const positionSizeValue = document.getElementById('positionSizeValue');
+            
+            positionSizeSlider.addEventListener('input', function() {
+                positionSizeValue.textContent = `${this.value}% - Maximum amount to allocate to a single trade`;
+            });
+            
+            // Daily loss limit slider
+            const dailyLossLimitSlider = document.getElementById('dailyLossLimit');
+            const dailyLossLimitValue = document.getElementById('dailyLossLimitValue');
+            
+            dailyLossLimitSlider.addEventListener('input', function() {
+                dailyLossLimitValue.textContent = `${this.value}% - Stop trading for the day if losses exceed this amount`;
+            });
+            
+            // Delete account button
+            const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+            const deleteAccountModal = document.getElementById('deleteAccountModal');
+            const closeDeleteModal = document.getElementById('closeDeleteModal');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const deleteConfirmInput = document.getElementById('deleteConfirm');
+            
+            deleteAccountBtn.addEventListener('click', function() {
+                deleteAccountModal.style.display = 'flex';
+            });
+            
+            closeDeleteModal.addEventListener('click', function() {
+                deleteAccountModal.style.display = 'none';
+                deleteConfirmInput.value = '';
+                confirmDeleteBtn.disabled = true;
+            });
+            
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteAccountModal.style.display = 'none';
+                deleteConfirmInput.value = '';
+                confirmDeleteBtn.disabled = true;
+            });
+            
+            deleteConfirmInput.addEventListener('input', function() {
+                confirmDeleteBtn.disabled = this.value !== 'DELETE';
+            });
+            
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (deleteConfirmInput.value === 'DELETE') {
+                    // In a real app, this would delete the account
+                    alert('Account deletion requested. A confirmation email has been sent.');
+                    deleteAccountModal.style.display = 'none';
+                    deleteConfirmInput.value = '';
+                    confirmDeleteBtn.disabled = true;
+                }
+            });
+            
+            // Close modal when clicking outside
+            deleteAccountModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    deleteAccountModal.style.display = 'none';
+                    deleteConfirmInput.value = '';
+                    confirmDeleteBtn.disabled = true;
+                }
+            });
+            
+            // Add API key button
+            const addApiKeyBtn = document.getElementById('addApiKeyBtn');
+            addApiKeyBtn.addEventListener('click', function() {
+                // In a real app, this would open a form to add API key
+                showNotification('API key addition form opened');
+            });
+            
+            // Export data button
+            const exportDataBtn = document.getElementById('exportDataBtn');
+            exportDataBtn.addEventListener('click', function() {
+                // In a real app, this would trigger a data export
+                showNotification('Data export started. You will receive an email when it\'s ready.');
+            });
+            
+            // Revoke all sessions button
+            const revokeAllSessionsBtn = document.getElementById('revokeAllSessions');
+            revokeAllSessionsBtn.addEventListener('click', function() {
+                if (confirm('Revoke all other sessions? You will be logged out from all other devices.')) {
+                    showNotification('All other sessions have been revoked');
+                }
+            });
+            
+            // Notification button
+            document.querySelector('.notification-btn').addEventListener('click', function() {
+                // Reset badge count
+                this.querySelector('.notification-badge').textContent = '0';
+                this.querySelector('.notification-badge').style.opacity = '0.5';
+                
+                // Show alert
+                alert('You have 2 new notifications:\n\n1. Settings updated successfully\n2. New security feature available');
+            });
+            
+            // Update last updated time
+            function updateLastUpdated() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                document.getElementById('lastUpdated').textContent = timeString;
+            }
+            
+            // Save settings function
+            function saveSettings(formId) {
+                // In a real app, this would save to the server
+                // For now, we'll just show a notification
+                const formName = formId.replace('Form', '').replace(/([A-Z])/g, ' $1').trim();
+                showNotification(`${formName} saved successfully`);
+            }
+            
+            // Show notification
+            function showNotification(message) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--card-bg);
+                    color: var(--text-white);
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    border-left: 4px solid var(--primary);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    z-index: 10001;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                notification.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+                
+                // Add CSS for animations
+                if (!document.getElementById('notification-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'notification-styles';
+                    style.textContent = `
+                        @keyframes slideIn {
+                            from { transform: translateX(100%); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                        @keyframes slideOut {
+                            from { transform: translateX(0); opacity: 1; }
+                            to { transform: translateX(100%); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+            
+            // Initialize
+            updateLastUpdated();
+            
+            // Auto-save simulation (for demo purposes)
+            setInterval(() => {
+                // Simulate auto-saving of form data
+                // In a real app, this would be done when the user makes changes
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio | AlphaPredict AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --primary-dark: #00d4aa;
+            --secondary: #0066ff;
+            --dark-bg: #0b0f1a;
+            --darker-bg: #060912;
+            --card-bg: #121828;
+            --text-light: #cfd8ff;
+            --text-white: #ffffff;
+            --success: #00cc88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --buy: #00cc66;
+            --sell: #ff4d4d;
+            --hold: #ffaa00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-white);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--darker-bg);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo-container h2 {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 15px;
+            background: rgba(0, 255, 204, 0.05);
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu a.active {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: var(--card-bg);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .notification-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--sell);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 77, 77, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Portfolio Stats */
+        .portfolio-stats {
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .stat-card.positive::before {
+            background: var(--success);
+        }
+
+        .stat-card.negative::before {
+            background: var(--danger);
+        }
+
+        .stat-card.neutral::before {
+            background: var(--warning);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.total {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.daily {
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--secondary);
+        }
+
+        .stat-icon.monthly {
+            background: rgba(0, 204, 136, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.best {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-info h3 {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .change {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .change.positive {
+            color: var(--success);
+        }
+
+        .change.negative {
+            color: var(--danger);
+        }
+
+        .change.neutral {
+            color: var(--warning);
+        }
+        
+        /* Portfolio Overview */
+        .portfolio-overview {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .portfolio-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .timeframe-select {
+            background: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: var(--text-white);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .timeframe-select:focus {
+            border-color: var(--primary);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .allocation-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .allocation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .allocation-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .allocation-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Holdings Table */
+        .holdings-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .holdings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .holdings-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .holdings-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(0, 255, 204, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .holdings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .holdings-table thead {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .holdings-table th {
+            text-align: left;
+            padding: 18px 15px;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        .holdings-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .holdings-table tbody tr {
+            transition: 0.3s;
+        }
+
+        .holdings-table tbody tr:hover {
+            background: rgba(0, 255, 204, 0.03);
+        }
+
+        .holdings-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .asset-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .gold .asset-icon-small {
+            background: linear-gradient(135deg, #FFD700, #FFAA00);
+            color: #000;
+        }
+
+        .btc .asset-icon-small {
+            background: linear-gradient(135deg, #F7931A, #FF9900);
+            color: #000;
+        }
+
+        .eth .asset-icon-small {
+            background: linear-gradient(135deg, #627EEA, #8A92B2);
+            color: #000;
+        }
+
+        .forex .asset-icon-small {
+            background: linear-gradient(135deg, #0066FF, #00AAFF);
+            color: #000;
+        }
+
+        .stock .asset-icon-small {
+            background: linear-gradient(135deg, #00CC88, #00AA66);
+            color: #000;
+        }
+
+        .asset-details-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .asset-name {
+            font-weight: 600;
+        }
+
+        .asset-symbol {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .profit-loss-cell {
+            font-weight: 700;
+        }
+
+        .profit {
+            color: var(--success);
+        }
+
+        .loss {
+            color: var(--danger);
+        }
+
+        .holding-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .holding-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .holding-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        /* Recent Transactions */
+        .transactions-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .transactions-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .view-all-btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+
+        .view-all-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+        }
+
+        .transactions-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .transaction-item:hover {
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-asset {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .transaction-details h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .transaction-details p {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .transaction-type {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-buy {
+            background: rgba(0, 204, 102, 0.15);
+            color: var(--buy);
+        }
+
+        .type-sell {
+            background: rgba(255, 77, 77, 0.15);
+            color: var(--sell);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        /* Footer */
+        .portfolio-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            background: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-white);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+        }
+
+        .modal-btn.primary {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            color: var(--text-white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-btn.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .modal-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-light);
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--text-white);
+        }
+
+        .empty-state p {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+                position: relative;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .nav-menu li {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+            
+            .nav-menu a {
+                white-space: nowrap;
+            }
+            
+            .user-profile {
+                display: none;
+            }
+            
+            .holdings-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .holdings-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .holdings-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .transaction-info {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .action-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h2>AlphaPredict AI</h2>
+        </div>
+        
+        <div class="user-profile">
+            <div class="user-avatar">JD</div>
+            <div class="user-info">
+                <h3>John Doe</h3>
+                <p>Pro Trader</p>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+           <li>
+    <a href="{{ url_for('dashboard') }}">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('market_analysis') }}">
+        <i class="fas fa-chart-bar"></i> Market Analysis
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('signals') }}">
+        <i class="fas fa-bell"></i> Signals
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('portfolio') }}">
+        <i class="fas fa-wallet"></i> Portfolio
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('history') }}">
+        <i class="fas fa-history"></i> History
+    </a>
+</li>
+
+<li>
+    <a href="{{ url_for('settings') }}" class="active">
+        <i class="fas fa-cog"></i> Settings
+    </a>
+</li>
+
+        </ul>
+        
+        <div class="sidebar-footer">
+            <p>© 2026 AlphaPredict AI</p>
+            <p>v2.5.1</p>
+        </div>
+    </div>
+    
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="page-title">
+                <i class="fas fa-wallet"></i> My Portfolio
+            </div>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='/logout'">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Portfolio Stats -->
+        <div class="portfolio-stats">
+            <div class="stats-grid">
+                <div class="stat-card positive">
+                    <div class="stat-icon total">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Portfolio Value</h3>
+                        <div class="value" id="totalValue">$124,850.75</div>
+                        <div class="change positive">+2.4% today</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card negative">
+                    <div class="stat-icon daily">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Today's P/L</h3>
+                        <div class="value" id="dailyPL">+$2,890.50</div>
+                        <div class="change positive">+2.37%</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card positive">
+                    <div class="stat-icon monthly">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Monthly P/L</h3>
+                        <div class="value" id="monthlyPL">+$18,420.25</div>
+                        <div class="change positive">+17.3%</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card positive">
+                    <div class="stat-icon best">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Best Performer</h3>
+                        <div class="value">BTC +24.7%</div>
+                        <div class="change positive">+$8,250.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Portfolio Overview -->
+        <div class="portfolio-overview">
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div class="chart-title">Portfolio Performance</div>
+                    <select class="timeframe-select" id="performanceTimeframe">
+                        <option value="1d">1 Day</option>
+                        <option value="1w">1 Week</option>
+                        <option value="1m" selected>1 Month</option>
+                        <option value="3m">3 Months</option>
+                        <option value="1y">1 Year</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="allocation-section">
+                <div class="allocation-header">
+                    <div class="allocation-title">Asset Allocation</div>
+                </div>
+                <div class="allocation-container">
+                    <canvas id="allocationChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Holdings Table -->
+        <div class="holdings-section">
+            <div class="holdings-header">
+                <div class="holdings-title">Current Holdings</div>
+                <div class="holdings-actions">
+                    <button class="action-btn secondary" id="addHoldingBtn">
+                        <i class="fas fa-plus"></i> Add Holding
+                    </button>
+                    <button class="action-btn primary" id="rebalanceBtn">
+                        <i class="fas fa-balance-scale"></i> Rebalance
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="holdings-table" id="holdingsTable">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Quantity</th>
+                            <th>Avg. Price</th>
+                            <th>Current Price</th>
+                            <th>Value</th>
+                            <th>P/L</th>
+                            <th>Allocation</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="holdingsTableBody">
+                        <!-- Holdings will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Recent Transactions -->
+        <div class="transactions-section">
+            <div class="transactions-header">
+                <div class="transactions-title">Recent Transactions</div>
+                <button class="view-all-btn" onclick="window.location.href='history.html'">
+                    <i class="fas fa-history"></i> View All
+                </button>
+            </div>
+            
+            <div class="transactions-list" id="transactionsList">
+                <!-- Transactions will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="portfolio-footer">
+            <p>Portfolio values are updated in real-time. Past performance does not guarantee future results.</p>
+            <p>Last updated: <span id="lastUpdated">Just now</span></p>
+        </div>
+    </div>
+    
+    <!-- ===== ADD HOLDING MODAL ===== -->
+    <div class="modal" id="addHoldingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Holding</h2>
+                <button class="modal-close" id="closeAddModal">&times;</button>
+            </div>
+            
+            <form class="modal-form" id="addHoldingForm">
+                <div class="form-group">
+                    <label class="form-label">Asset</label>
+                    <select class="form-select" id="assetSelect" required>
+                        <option value="">Select an asset</option>
+                        <option value="gold">Gold (XAUUSD)</option>
+                        <option value="btc">Bitcoin (BTCUSDT)</option>
+                        <option value="eth">Ethereum (ETHUSDT)</option>
+                        <option value="eurusd">EUR/USD</option>
+                        <option value="spx">S&P 500 (SPX)</option>
+                        <option value="aapl">Apple Inc. (AAPL)</option>
+                        <option value="tsla">Tesla Inc. (TSLA)</option>
+                        <option value="googl">Alphabet Inc. (GOOGL)</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-input" id="quantityInput" step="0.001" min="0.001" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Purchase Price</label>
+                        <input type="number" class="form-input" id="priceInput" step="0.01" min="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date Purchased</label>
+                        <input type="date" class="form-input" id="dateInput" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Transaction Type</label>
+                        <select class="form-select" id="typeSelect" required>
+                            <option value="buy">BUY</option>
+                            <option value="sell">SELL</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea class="form-input" id="notesInput" rows="3"></textarea>
+                </div>
+            </form>
+            
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelAddBtn">Cancel</button>
+                <button class="modal-btn primary" id="submitAddBtn">Add Holding</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== TRADE MODAL ===== -->
+    <div class="modal" id="tradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="tradeModalTitle">Execute Trade</h2>
+                <button class="modal-close" id="closeTradeModal">&times;</button>
+            </div>
+            
+            <form class="modal-form" id="tradeForm">
+                <div class="form-group">
+                    <label class="form-label">Asset</label>
+                    <div class="form-input" id="tradeAssetDisplay" style="background: var(--darker-bg); padding: 12px 15px; border-radius: 8px;">
+                        <strong id="tradeAssetName">-</strong> (<span id="tradeAssetSymbol">-</span>)
+                    </div>
+                    <input type="hidden" id="tradeAssetId">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Current Price</label>
+                        <div class="form-input" id="tradeCurrentPriceDisplay" style="background: var(--darker-bg); padding: 12px 15px; border-radius: 8px; font-weight: 600;">
+                            $<span id="tradeCurrentPrice">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Current Holdings</label>
+                        <div class="form-input" id="tradeCurrentHoldingDisplay" style="background: var(--darker-bg); padding: 12px 15px; border-radius: 8px;">
+                            <span id="tradeCurrentQuantity">-</span> units
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Trade Type</label>
+                        <select class="form-select" id="tradeTypeSelect" required>
+                            <option value="buy">BUY</option>
+                            <option value="sell">SELL</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-input" id="tradeQuantityInput" step="0.001" min="0.001" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Order Type</label>
+                        <select class="form-select" id="orderTypeSelect" required>
+                            <option value="market">Market Order</option>
+                            <option value="limit">Limit Order</option>
+                            <option value="stop">Stop Order</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="limitPriceGroup" style="display: none;">
+                        <label class="form-label">Limit Price</label>
+                        <input type="number" class="form-input" id="limitPriceInput" step="0.01" min="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea class="form-input" id="tradeNotesInput" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group" style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Estimated Cost:</span>
+                        <strong id="estimatedCost">$0.00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Fees (0.1%):</span>
+                        <strong id="estimatedFees">$0.00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 16px;">
+                        <span>Total:</span>
+                        <strong id="estimatedTotal">$0.00</strong>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelTradeBtn">Cancel</button>
+                <button class="modal-btn primary" id="submitTradeBtn">Execute Trade</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Sample portfolio data
+        let portfolioData = {
+            totalValue: 124850.75,
+            holdings: [
+                {
+                    id: 1,
+                    asset: "Bitcoin",
+                    symbol: "BTCUSDT",
+                    type: "btc",
+                    quantity: 0.85,
+                    avgPrice: 63200.00,
+                    currentPrice: 67850.00,
+                    value: 57672.50,
+                    pl: 3952.50,
+                    plPercent: 7.36,
+                    allocation: 46.2,
+                    purchasedDate: "2026-01-10"
+                },
+                {
+                    id: 2,
+                    asset: "Gold",
+                    symbol: "XAUUSD",
+                    type: "gold",
+                    quantity: 8.5,
+                    avgPrice: 2280.00,
+                    currentPrice: 2350.50,
+                    value: 19979.25,
+                    pl: 599.25,
+                    plPercent: 3.09,
+                    allocation: 16.0,
+                    purchasedDate: "2026-01-05"
+                },
+                {
+                    id: 3,
+                    asset: "Ethereum",
+                    symbol: "ETHUSDT",
+                    type: "eth",
+                    quantity: 4.2,
+                    avgPrice: 3420.00,
+                    currentPrice: 3540.00,
+                    value: 14868.00,
+                    pl: 504.00,
+                    plPercent: 3.51,
+                    allocation: 11.9,
+                    purchasedDate: "2026-01-12"
+                },
+                {
+                    id: 4,
+                    asset: "S&P 500",
+                    symbol: "SPX",
+                    type: "stock",
+                    quantity: 12,
+                    avgPrice: 4820.00,
+                    currentPrice: 4895.00,
+                    value: 58740.00,
+                    pl: 900.00,
+                    plPercent: 1.87,
+                    allocation: 14.3,
+                    purchasedDate: "2026-01-02"
+                },
+                {
+                    id: 5,
+                    asset: "Apple Inc.",
+                    symbol: "AAPL",
+                    type: "stock",
+                    quantity: 25,
+                    avgPrice: 192.50,
+                    currentPrice: 198.25,
+                    value: 4956.25,
+                    pl: 143.75,
+                    plPercent: 2.99,
+                    allocation: 4.0,
+                    purchasedDate: "2026-01-15"
+                },
+                {
+                    id: 6,
+                    asset: "EUR/USD",
+                    symbol: "EURUSD",
+                    type: "forex",
+                    quantity: 50000,
+                    avgPrice: 1.0820,
+                    currentPrice: 1.0845,
+                    value: 54225.00,
+                    pl: 125.00,
+                    plPercent: 0.23,
+                    allocation: 7.6,
+                    purchasedDate: "2026-01-08"
+                }
+            ],
+            transactions: [
+                {
+                    id: 1,
+                    asset: "Bitcoin",
+                    symbol: "BTCUSDT",
+                    type: "btc",
+                    transactionType: "buy",
+                    quantity: 0.25,
+                    price: 66500.00,
+                    amount: 16625.00,
+                    date: "2026-01-20 14:30:22",
+                    status: "completed"
+                },
+                {
+                    id: 2,
+                    asset: "Gold",
+                    symbol: "XAUUSD",
+                    type: "gold",
+                    transactionType: "sell",
+                    quantity: 2.0,
+                    price: 2360.00,
+                    amount: 4720.00,
+                    date: "2026-01-19 11:15:10",
+                    status: "completed"
+                },
+                {
+                    id: 3,
+                    asset: "Ethereum",
+                    symbol: "ETHUSDT",
+                    type: "eth",
+                    transactionType: "buy",
+                    quantity: 1.5,
+                    price: 3520.00,
+                    amount: 5280.00,
+                    date: "2026-01-18 09:45:33",
+                    status: "completed"
+                },
+                {
+                    id: 4,
+                    asset: "Apple Inc.",
+                    symbol: "AAPL",
+                    type: "stock",
+                    transactionType: "buy",
+                    quantity: 10,
+                    price: 195.50,
+                    amount: 1955.00,
+                    date: "2026-01-17 16:20:15",
+                    status: "completed"
+                },
+                {
+                    id: 5,
+                    asset: "EUR/USD",
+                    symbol: "EURUSD",
+                    type: "forex",
+                    transactionType: "sell",
+                    quantity: 20000,
+                    price: 1.0860,
+                    amount: 21720.00,
+                    date: "2026-01-16 13:05:42",
+                    status: "completed"
+                }
+            ]
+        };
+
+        // Charts
+        let performanceChart, allocationChart;
+        
+        // Format currency
+        function formatCurrency(value, isForex = false) {
+            if (isForex) {
+                return value.toFixed(4);
+            }
+            if (value >= 1000) {
+                return '$' + value.toLocaleString('en-US', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+            }
+            return '$' + value.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Format percentage
+        function formatPercentage(value) {
+            return (value >= 0 ? '+' : '') + value.toFixed(2) + '%';
+        }
+
+        // Calculate total portfolio value
+        function calculateTotalPortfolioValue() {
+            let total = 0;
+            portfolioData.holdings.forEach(holding => {
+                total += holding.value;
+            });
+            portfolioData.totalValue = total;
+            return total;
+        }
+
+        // Calculate allocations
+        function calculateAllocations() {
+            const totalValue = calculateTotalPortfolioValue();
+            portfolioData.holdings.forEach(holding => {
+                holding.allocation = (holding.value / totalValue) * 100;
+            });
+        }
+
+        // Render holdings table
+        function renderHoldingsTable() {
+            const tableBody = document.getElementById('holdingsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (portfolioData.holdings.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state" style="padding: 30px;">
+                                <div class="empty-icon">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <h3>No holdings yet</h3>
+                                <p>Start building your portfolio by adding your first holding.</p>
+                                <button class="action-btn primary" id="addFirstHoldingBtn" style="margin-top: 20px;">
+                                    <i class="fas fa-plus"></i> Add Your First Holding
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                document.getElementById('addFirstHoldingBtn').addEventListener('click', openAddHoldingModal);
+                return;
+            }
+            
+            // Sort by value (descending)
+            const sortedHoldings = [...portfolioData.holdings].sort((a, b) => b.value - a.value);
+            
+            sortedHoldings.forEach(holding => {
+                const isForex = holding.type === 'forex';
+                const isProfit = holding.pl >= 0;
+                const row = document.createElement('tr');
+                row.className = holding.type;
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="asset-cell">
+                            <div class="asset-icon-small ${holding.type}">
+                                <i class="fas fa-${holding.type === 'gold' ? 'gem' : holding.type === 'btc' ? 'bitcoin' : holding.type === 'eth' ? 'ethereum' : holding.type === 'forex' ? 'globe-americas' : 'chart-line'}"></i>
+                            </div>
+                            <div class="asset-details-cell">
+                                <div class="asset-name">${holding.asset}</div>
+                                <div class="asset-symbol">${holding.symbol}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${holding.quantity.toLocaleString('en-US', { minimumFractionDigits: holding.type === 'forex' ? 0 : 3, maximumFractionDigits: holding.type === 'forex' ? 0 : 3 })}</td>
+                    <td>${isForex ? '' : '$'}${formatCurrency(holding.avgPrice, isForex)}</td>
+                    <td>${isForex ? '' : '$'}${formatCurrency(holding.currentPrice, isForex)}</td>
+                    <td>${formatCurrency(holding.value)}</td>
+                    <td class="profit-loss-cell ${isProfit ? 'profit' : 'loss'}">
+                        ${isProfit ? '+' : ''}${formatCurrency(holding.pl)}<br>
+                        <small>(${formatPercentage(holding.plPercent)})</small>
+                    </td>
+                    <td>${holding.allocation.toFixed(1)}%</td>
+                    <td>
+                        <div class="holding-actions">
+                            <button class="holding-btn buy-btn" data-id="${holding.id}" title="Buy More">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                            <button class="holding-btn sell-btn" data-id="${holding.id}" title="Sell">
+                                <i class="fas fa-minus-circle"></i>
+                            </button>
+                            <button class="holding-btn edit-btn" data-id="${holding.id}" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    openTradeModal(id, 'buy');
+                });
+            });
+            
+            document.querySelectorAll('.sell-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    openTradeModal(id, 'sell');
+                });
+            });
+            
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    editHolding(id);
+                });
+            });
+        }
+
+        // Render transactions list
+        function renderTransactionsList() {
+            const transactionsList = document.getElementById('transactionsList');
+            transactionsList.innerHTML = '';
+            
+            if (portfolioData.transactions.length === 0) {
+                transactionsList.innerHTML = `
+                    <div class="empty-state" style="padding: 30px;">
+                        <div class="empty-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3>No transactions yet</h3>
+                        <p>Your transaction history will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Show only last 5 transactions
+            const recentTransactions = portfolioData.transactions.slice(0, 5);
+            
+            recentTransactions.forEach(transaction => {
+                const isForex = transaction.type === 'forex';
+                const transactionItem = document.createElement('div');
+                transactionItem.className = 'transaction-item';
+                
+                transactionItem.innerHTML = `
+                    <div class="transaction-asset">
+                        <div class="transaction-icon ${transaction.type}">
+                            <i class="fas fa-${transaction.type === 'gold' ? 'gem' : transaction.type === 'btc' ? 'bitcoin' : transaction.type === 'eth' ? 'ethereum' : transaction.type === 'forex' ? 'globe-americas' : 'chart-line'}"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>${transaction.asset} (${transaction.symbol})</h4>
+                            <p>${formatDate(transaction.date)}</p>
+                        </div>
+                    </div>
+                    <div class="transaction-info">
+                        <div>
+                            <span class="transaction-type type-${transaction.transactionType}">${transaction.transactionType.toUpperCase()}</span>
+                            <div class="transaction-amount">
+                                ${transaction.quantity.toLocaleString('en-US', { minimumFractionDigits: isForex ? 0 : 3, maximumFractionDigits: isForex ? 0 : 3 })} @ ${isForex ? '' : '$'}${formatCurrency(transaction.price, isForex)}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600; font-size: 16px;">${formatCurrency(transaction.amount)}</div>
+                            <div class="transaction-date">${formatDate(transaction.date, true)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                transactionsList.appendChild(transactionItem);
+            });
+        }
+
+        // Format date
+        function formatDate(dateString, timeOnly = false) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            
+            if (timeOnly) {
+                return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+            
+            if (diffHours < 24) {
+                return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+            } else {
+                return date.toLocaleDateString();
+            }
+        }
+
+        // Initialize performance chart
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            // Generate sample data
+            const labels = [];
+            const data = [];
+            
+            // Generate last 30 days
+            const today = new Date();
+            for (let i = 30; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                
+                // Generate data with upward trend and some randomness
+                const base = 100000;
+                const trend = i * 800; // Upward trend
+                const random = (Math.random() - 0.5) * 2000; // Random fluctuation
+                data.push(base + trend + random);
+            }
+            
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: data,
+                        borderColor: '#00ffcc',
+                        backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                display: false
+                            },
+                            ticks: {
+                                color: '#cfd8ff',
+                                maxTicksLimit: 8
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: '#cfd8ff',
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    }
+                }
+            });
+        }
+
+        // Initialize allocation chart
+        function initAllocationChart() {
+            const ctx = document.getElementById('allocationChart').getContext('2d');
+            
+            // Prepare data for chart
+            const labels = [];
+            const data = [];
+            const backgroundColors = [
+                '#F7931A', // BTC - Orange
+                '#FFD700', // Gold - Yellow
+                '#627EEA', // ETH - Blue
+                '#00CC88', // Stocks - Green
+                '#0066FF', // Forex - Blue
+                '#FF3366'  // Other - Pink
+            ];
+            
+            // Group by asset type
+            const allocationByType = {
+                btc: 0,
+                gold: 0,
+                eth: 0,
+                stock: 0,
+                forex: 0,
+                other: 0
+            };
+            
+            portfolioData.holdings.forEach(holding => {
+                if (allocationByType.hasOwnProperty(holding.type)) {
+                    allocationByType[holding.type] += holding.allocation;
+                } else {
+                    allocationByType.other += holding.allocation;
+                }
+            });
+            
+            // Add to chart data
+            if (allocationByType.btc > 0) {
+                labels.push('Bitcoin');
+                data.push(allocationByType.btc);
+            }
+            if (allocationByType.gold > 0) {
+                labels.push('Gold');
+                data.push(allocationByType.gold);
+            }
+            if (allocationByType.eth > 0) {
+                labels.push('Ethereum');
+                data.push(allocationByType.eth);
+            }
+            if (allocationByType.stock > 0) {
+                labels.push('Stocks');
+                data.push(allocationByType.stock);
+            }
+            if (allocationByType.forex > 0) {
+                labels.push('Forex');
+                data.push(allocationByType.forex);
+            }
+            if (allocationByType.other > 0) {
+                labels.push('Other');
+                data.push(allocationByType.other);
+            }
+            
+            allocationChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors.slice(0, labels.length),
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#cfd8ff',
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // Update stats display
+        function updateStatsDisplay() {
+            // Update total value
+            document.getElementById('totalValue').textContent = formatCurrency(calculateTotalPortfolioValue());
+            
+            // Calculate daily P/L (random for demo)
+            const dailyPL = portfolioData.totalValue * 0.0237;
+            document.getElementById('dailyPL').textContent = '+' + formatCurrency(dailyPL);
+            
+            // Calculate monthly P/L (random for demo)
+            const monthlyPL = portfolioData.totalValue * 0.173;
+            document.getElementById('monthlyPL').textContent = '+' + formatCurrency(monthlyPL);
+        }
+
+        // Open add holding modal
+        function openAddHoldingModal() {
+            document.getElementById('addHoldingModal').style.display = 'flex';
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateInput').value = today;
+        }
+
+        // Close add holding modal
+        function closeAddHoldingModal() {
+            document.getElementById('addHoldingModal').style.display = 'none';
+            document.getElementById('addHoldingForm').reset();
+        }
+
+        // Open trade modal
+        function openTradeModal(holdingId, tradeType = 'buy') {
+            const holding = portfolioData.holdings.find(h => h.id == holdingId);
+            if (!holding) return;
+            
+            const modal = document.getElementById('tradeModal');
+            const isForex = holding.type === 'forex';
+            
+            // Set modal title
+            document.getElementById('tradeModalTitle').textContent = `${tradeType.toUpperCase()} ${holding.asset}`;
+            
+            // Set holding info
+            document.getElementById('tradeAssetId').value = holding.id;
+            document.getElementById('tradeAssetName').textContent = holding.asset;
+            document.getElementById('tradeAssetSymbol').textContent = holding.symbol;
+            document.getElementById('tradeCurrentPrice').textContent = formatCurrency(holding.currentPrice, isForex);
+            document.getElementById('tradeCurrentQuantity').textContent = holding.quantity.toLocaleString('en-US', { 
+                minimumFractionDigits: isForex ? 0 : 3, 
+                maximumFractionDigits: isForex ? 0 : 3 
+            });
+            
+            // Set trade type
+            document.getElementById('tradeTypeSelect').value = tradeType;
+            
+            // Set max quantity for sell orders
+            if (tradeType === 'sell') {
+                document.getElementById('tradeQuantityInput').max = holding.quantity;
+            } else {
+                document.getElementById('tradeQuantityInput').removeAttribute('max');
+            }
+            
+            // Clear quantity
+            document.getElementById('tradeQuantityInput').value = '';
+            
+            // Show/hide limit price field based on order type
+            document.getElementById('orderTypeSelect').addEventListener('change', function() {
+                const limitPriceGroup = document.getElementById('limitPriceGroup');
+                if (this.value === 'limit') {
+                    limitPriceGroup.style.display = 'block';
+                } else {
+                    limitPriceGroup.style.display = 'none';
+                }
+                updateTradeEstimate();
+            });
+            
+            // Update estimate when quantity changes
+            document.getElementById('tradeQuantityInput').addEventListener('input', updateTradeEstimate);
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Trigger initial estimate update
+            updateTradeEstimate();
+        }
+
+        // Update trade estimate
+        function updateTradeEstimate() {
+            const holdingId = document.getElementById('tradeAssetId').value;
+            const holding = portfolioData.holdings.find(h => h.id == holdingId);
+            if (!holding) return;
+            
+            const quantity = parseFloat(document.getElementById('tradeQuantityInput').value) || 0;
+            const tradeType = document.getElementById('tradeTypeSelect').value;
+            const orderType = document.getElementById('orderTypeSelect').value;
+            
+            let price = holding.currentPrice;
+            if (orderType === 'limit') {
+                const limitPrice = parseFloat(document.getElementById('limitPriceInput').value);
+                if (limitPrice && !isNaN(limitPrice)) {
+                    price = limitPrice;
+                }
+            }
+            
+            const cost = quantity * price;
+            const fees = cost * 0.001; // 0.1% fees
+            const total = tradeType === 'buy' ? cost + fees : cost - fees;
+            
+            document.getElementById('estimatedCost').textContent = formatCurrency(cost);
+            document.getElementById('estimatedFees').textContent = formatCurrency(fees);
+            document.getElementById('estimatedTotal').textContent = formatCurrency(total);
+        }
+
+        // Close trade modal
+        function closeTradeModal() {
+            document.getElementById('tradeModal').style.display = 'none';
+            document.getElementById('tradeForm').reset();
+            document.getElementById('limitPriceGroup').style.display = 'none';
+        }
+
+        // Execute trade
+        function executeTrade() {
+            const holdingId = parseInt(document.getElementById('tradeAssetId').value);
+            const tradeType = document.getElementById('tradeTypeSelect').value;
+            const quantity = parseFloat(document.getElementById('tradeQuantityInput').value);
+            const orderType = document.getElementById('orderTypeSelect').value;
+            
+            if (!quantity || quantity <= 0) {
+                alert('Please enter a valid quantity');
+                return;
+            }
+            
+            const holding = portfolioData.holdings.find(h => h.id === holdingId);
+            if (!holding) return;
+            
+            // Check if selling more than owned
+            if (tradeType === 'sell' && quantity > holding.quantity) {
+                alert(`You only own ${holding.quantity.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} ${holding.symbol}. Cannot sell more than you own.`);
+                return;
+            }
+            
+            let price = holding.currentPrice;
+            if (orderType === 'limit') {
+                const limitPrice = parseFloat(document.getElementById('limitPriceInput').value);
+                if (limitPrice && !isNaN(limitPrice)) {
+                    price = limitPrice;
+                }
+            }
+            
+            const cost = quantity * price;
+            const fees = cost * 0.001;
+            const total = tradeType === 'buy' ? cost + fees : cost - fees;
+            
+            if (confirm(`${tradeType.toUpperCase()} ${quantity} ${holding.symbol} at ${formatCurrency(price, holding.type === 'forex')}?\n\nTotal: ${formatCurrency(total)}\nFees: ${formatCurrency(fees)}`)) {
+                // Update holding
+                if (tradeType === 'buy') {
+                    // Calculate new average price
+                    const totalQuantity = holding.quantity + quantity;
+                    const totalCost = (holding.quantity * holding.avgPrice) + cost;
+                    holding.avgPrice = totalCost / totalQuantity;
+                    holding.quantity = totalQuantity;
+                } else {
+                    holding.quantity -= quantity;
+                    
+                    // If quantity reaches 0, remove holding
+                    if (holding.quantity <= 0) {
+                        const index = portfolioData.holdings.findIndex(h => h.id === holdingId);
+                        if (index !== -1) {
+                            portfolioData.holdings.splice(index, 1);
+                        }
+                    }
+                }
+                
+                // Add transaction
+                const newTransaction = {
+                    id: portfolioData.transactions.length + 1,
+                    asset: holding.asset,
+                    symbol: holding.symbol,
+                    type: holding.type,
+                    transactionType: tradeType,
+                    quantity: quantity,
+                    price: price,
+                    amount: total,
+                    date: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                    status: 'completed'
+                };
+                portfolioData.transactions.unshift(newTransaction);
+                
+                // Update portfolio
+                updatePortfolio();
+                
+                // Show notification
+                showNotification(`${tradeType.toUpperCase()} order executed for ${holding.asset}`);
+                
+                // Close modal
+                closeTradeModal();
+            }
+        }
+
+        // Add new holding
+        function addNewHolding() {
+            const assetSelect = document.getElementById('assetSelect');
+            const quantity = parseFloat(document.getElementById('quantityInput').value);
+            const price = parseFloat(document.getElementById('priceInput').value);
+            const date = document.getElementById('dateInput').value;
+            const type = document.getElementById('typeSelect').value;
+            const notes = document.getElementById('notesInput').value;
+            
+            if (!assetSelect.value || !quantity || !price || !date) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Map asset selection to holding data
+            const assetMap = {
+                gold: { asset: 'Gold', symbol: 'XAUUSD', type: 'gold' },
+                btc: { asset: 'Bitcoin', symbol: 'BTCUSDT', type: 'btc' },
+                eth: { asset: 'Ethereum', symbol: 'ETHUSDT', type: 'eth' },
+                eurusd: { asset: 'EUR/USD', symbol: 'EURUSD', type: 'forex' },
+                spx: { asset: 'S&P 500', symbol: 'SPX', type: 'stock' },
+                aapl: { asset: 'Apple Inc.', symbol: 'AAPL', type: 'stock' },
+                tsla: { asset: 'Tesla Inc.', symbol: 'TSLA', type: 'stock' },
+                googl: { asset: 'Alphabet Inc.', symbol: 'GOOGL', type: 'stock' }
+            };
+            
+            const assetInfo = assetMap[assetSelect.value];
+            if (!assetInfo) return;
+            
+            // Check if holding already exists
+            let existingHolding = portfolioData.holdings.find(h => h.symbol === assetInfo.symbol);
+            
+            if (type === 'buy') {
+                if (existingHolding) {
+                    // Update existing holding
+                    const totalQuantity = existingHolding.quantity + quantity;
+                    const totalCost = (existingHolding.quantity * existingHolding.avgPrice) + (quantity * price);
+                    existingHolding.avgPrice = totalCost / totalQuantity;
+                    existingHolding.quantity = totalQuantity;
+                } else {
+                    // Create new holding
+                    const newHolding = {
+                        id: portfolioData.holdings.length + 1,
+                        asset: assetInfo.asset,
+                        symbol: assetInfo.symbol,
+                        type: assetInfo.type,
+                        quantity: quantity,
+                        avgPrice: price,
+                        currentPrice: price, // Start with purchase price
+                        value: quantity * price,
+                        pl: 0,
+                        plPercent: 0,
+                        allocation: 0,
+                        purchasedDate: date,
+                        notes: notes
+                    };
+                    portfolioData.holdings.push(newHolding);
+                }
+            } else {
+                // Sell - check if we have enough
+                if (!existingHolding || existingHolding.quantity < quantity) {
+                    alert(`Cannot sell ${quantity} ${assetInfo.symbol}. You don't have enough holdings.`);
+                    return;
+                }
+                
+                existingHolding.quantity -= quantity;
+                
+                // If quantity reaches 0, remove holding
+                if (existingHolding.quantity <= 0) {
+                    const index = portfolioData.holdings.findIndex(h => h.symbol === assetInfo.symbol);
+                    if (index !== -1) {
+                        portfolioData.holdings.splice(index, 1);
+                    }
+                }
+            }
+            
+            // Add transaction
+            const newTransaction = {
+                id: portfolioData.transactions.length + 1,
+                asset: assetInfo.asset,
+                symbol: assetInfo.symbol,
+                type: assetInfo.type,
+                transactionType: type,
+                quantity: quantity,
+                price: price,
+                amount: quantity * price,
+                date: date + ' 12:00:00',
+                status: 'completed',
+                notes: notes
+            };
+            portfolioData.transactions.unshift(newTransaction);
+            
+            // Update portfolio
+            updatePortfolio();
+            
+            // Show notification
+            showNotification(`${type.toUpperCase()} order added for ${assetInfo.asset}`);
+            
+            // Close modal
+            closeAddHoldingModal();
+        }
+
+        // Edit holding
+        function editHolding(id) {
+            const holding = portfolioData.holdings.find(h => h.id == id);
+            if (!holding) return;
+            
+            const newQuantity = prompt(`Edit quantity for ${holding.asset} (${holding.symbol}):`, holding.quantity);
+            if (newQuantity !== null) {
+                const quantity = parseFloat(newQuantity);
+                if (isNaN(quantity) || quantity < 0) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
+                
+                const newAvgPrice = prompt(`Edit average purchase price for ${holding.asset}:`, holding.avgPrice);
+                if (newAvgPrice !== null) {
+                    const avgPrice = parseFloat(newAvgPrice);
+                    if (isNaN(avgPrice) || avgPrice <= 0) {
+                        alert('Please enter a valid price');
+                        return;
+                    }
+                    
+                    holding.quantity = quantity;
+                    holding.avgPrice = avgPrice;
+                    
+                    // Update portfolio
+                    updatePortfolio();
+                    
+                    // Show notification
+                    showNotification(`${holding.asset} holding updated`);
+                }
+            }
+        }
+
+        // Update portfolio (recalculate everything)
+        function updatePortfolio() {
+            // Update current prices (simulate market movement)
+            portfolioData.holdings.forEach(holding => {
+                const isForex = holding.type === 'forex';
+                const change = (Math.random() - 0.5) * (isForex ? 0.002 : holding.type === 'gold' ? 10 : holding.type === 'btc' ? 500 : holding.type === 'eth' ? 40 : 20);
+                holding.currentPrice += change;
+                
+                // Ensure price doesn't go negative
+                if (holding.currentPrice < 0.01) holding.currentPrice = 0.01;
+                
+                // Calculate value and P/L
+                holding.value = holding.quantity * holding.currentPrice;
+                holding.pl = holding.value - (holding.quantity * holding.avgPrice);
+                holding.plPercent = (holding.pl / (holding.quantity * holding.avgPrice)) * 100;
+            });
+            
+            // Calculate allocations
+            calculateAllocations();
+            
+            // Update displays
+            updateStatsDisplay();
+            renderHoldingsTable();
+            renderTransactionsList();
+            
+            // Update charts
+            updateCharts();
+            
+            // Update last updated time
+            updateLastUpdated();
+        }
+
+        // Update charts
+        function updateCharts() {
+            // Update allocation chart
+            if (allocationChart) {
+                // Group by asset type
+                const allocationByType = {
+                    btc: 0,
+                    gold: 0,
+                    eth: 0,
+                    stock: 0,
+                    forex: 0,
+                    other: 0
+                };
+                
+                portfolioData.holdings.forEach(holding => {
+                    if (allocationByType.hasOwnProperty(holding.type)) {
+                        allocationByType[holding.type] += holding.allocation;
+                    } else {
+                        allocationByType.other += holding.allocation;
+                    }
+                });
+                
+                // Update chart data
+                const labels = [];
+                const data = [];
+                
+                if (allocationByType.btc > 0) {
+                    labels.push('Bitcoin');
+                    data.push(allocationByType.btc);
+                }
+                if (allocationByType.gold > 0) {
+                    labels.push('Gold');
+                    data.push(allocationByType.gold);
+                }
+                if (allocationByType.eth > 0) {
+                    labels.push('Ethereum');
+                    data.push(allocationByType.eth);
+                }
+                if (allocationByType.stock > 0) {
+                    labels.push('Stocks');
+                    data.push(allocationByType.stock);
+                }
+                if (allocationByType.forex > 0) {
+                    labels.push('Forex');
+                    data.push(allocationByType.forex);
+                }
+                if (allocationByType.other > 0) {
+                    labels.push('Other');
+                    data.push(allocationByType.other);
+                }
+                
+                allocationChart.data.labels = labels;
+                allocationChart.data.datasets[0].data = data;
+                allocationChart.update();
+            }
+            
+            // Update performance chart with new data point
+            if (performanceChart) {
+                const newValue = calculateTotalPortfolioValue();
+                const lastValue = performanceChart.data.datasets[0].data[performanceChart.data.datasets[0].data.length - 1];
+                
+                // Add some randomness to the trend
+                const change = (newValue - lastValue) * 0.8 + (Math.random() - 0.5) * 1000;
+                const newDataPoint = lastValue + change;
+                
+                // Add new data point and remove oldest
+                performanceChart.data.labels.push(getCurrentTime());
+                performanceChart.data.datasets[0].data.push(newDataPoint);
+                
+                if (performanceChart.data.labels.length > 31) {
+                    performanceChart.data.labels.shift();
+                    performanceChart.data.datasets[0].data.shift();
+                }
+                
+                performanceChart.update('none');
+            }
+        }
+
+        // Get current time for chart
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Update last updated time
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('lastUpdated').textContent = timeString;
+        }
+
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--card-bg);
+                color: var(--text-white);
+                padding: 15px 20px;
+                border-radius: 8px;
+                border-left: 4px solid var(--primary);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+            
+            // Add CSS for animations
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Rebalance portfolio
+        function rebalancePortfolio() {
+            if (confirm('Rebalance portfolio to target allocations?\n\nThis will simulate selling overweight assets and buying underweight assets.')) {
+                // Simple rebalancing simulation
+                const targetAllocations = {
+                    btc: 40,
+                    gold: 15,
+                    eth: 15,
+                    stock: 20,
+                    forex: 10
+                };
+                
+                // Calculate total value
+                const totalValue = calculateTotalPortfolioValue();
+                
+                // Create rebalancing transactions
+                portfolioData.holdings.forEach(holding => {
+                    const targetValue = totalValue * (targetAllocations[holding.type] || 0) / 100;
+                    const currentValue = holding.value;
+                    const difference = targetValue - currentValue;
+                    
+                    if (Math.abs(difference) > totalValue * 0.01) { // Only rebalance if difference > 1%
+                        const transactionType = difference > 0 ? 'buy' : 'sell';
+                        const quantity = Math.abs(difference) / holding.currentPrice;
+                        
+                        // Add transaction
+                        const newTransaction = {
+                            id: portfolioData.transactions.length + 1,
+                            asset: holding.asset,
+                            symbol: holding.symbol,
+                            type: holding.type,
+                            transactionType: transactionType,
+                            quantity: quantity,
+                            price: holding.currentPrice,
+                            amount: Math.abs(difference),
+                            date: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                            status: 'completed',
+                            notes: 'Portfolio rebalancing'
+                        };
+                        portfolioData.transactions.unshift(newTransaction);
+                        
+                        // Update holding
+                        if (transactionType === 'buy') {
+                            const totalQuantity = holding.quantity + quantity;
+                            const totalCost = (holding.quantity * holding.avgPrice) + (quantity * holding.currentPrice);
+                            holding.avgPrice = totalCost / totalQuantity;
+                            holding.quantity = totalQuantity;
+                        } else {
+                            holding.quantity -= quantity;
+                        }
+                    }
+                });
+                
+                // Update portfolio
+                updatePortfolio();
+                
+                // Show notification
+                showNotification('Portfolio rebalanced successfully');
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial calculations
+            calculateAllocations();
+            
+            // Initial renders
+            updateStatsDisplay();
+            renderHoldingsTable();
+            renderTransactionsList();
+            
+            // Initialize charts
+            initPerformanceChart();
+            initAllocationChart();
+            
+            // Update last updated time
+            updateLastUpdated();
+            
+            // Add holding button
+            document.getElementById('addHoldingBtn').addEventListener('click', openAddHoldingModal);
+            
+            // Rebalance button
+            document.getElementById('rebalanceBtn').addEventListener('click', rebalancePortfolio);
+            
+            // Modal close buttons
+            document.getElementById('closeAddModal').addEventListener('click', closeAddHoldingModal);
+            document.getElementById('cancelAddBtn').addEventListener('click', closeAddHoldingModal);
+            document.getElementById('closeTradeModal').addEventListener('click', closeTradeModal);
+            document.getElementById('cancelTradeBtn').addEventListener('click', closeTradeModal);
+            
+            // Modal submit buttons
+            document.getElementById('submitAddBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                addNewHolding();
+            });
+            
+            document.getElementById('submitTradeBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                executeTrade();
+            });
+            
+            // Close modals when clicking outside
+            document.getElementById('addHoldingModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAddHoldingModal();
+                }
+            });
+            
+            document.getElementById('tradeModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeTradeModal();
+                }
+            });
+            
+            // Notification button
+            document.querySelector('.notification-btn').addEventListener('click', function() {
+                // Reset badge count
+                this.querySelector('.notification-badge').textContent = '0';
+                this.querySelector('.notification-badge').style.opacity = '0.5';
+                
+                // Show alert
+                alert('You have 3 new notifications:\n\n1. Portfolio value increased by 2.4%\n2. Bitcoin reached target price\n3. Rebalancing suggestion available');
+            });
+            
+            // Performance timeframe select
+            document.getElementById('performanceTimeframe').addEventListener('change', function() {
+                // In a real app, this would fetch new data based on timeframe
+                // For demo, we'll just show a message
+                const timeframes = {
+                    '1d': '1 Day',
+                    '1w': '1 Week',
+                    '1m': '1 Month',
+                    '3m': '3 Months',
+                    '1y': '1 Year'
+                };
+                showNotification(`Performance chart updated to ${timeframes[this.value]} view`);
+            });
+            
+            // Update portfolio every 10 seconds
+            setInterval(updatePortfolio, 10000);
+        });
+    </script>
+</body>
+</html>
